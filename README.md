@@ -1,2 +1,2 @@
 # LegoSwerve
-Repository for a differential swerve robot using limited Lego electronics
+Repository for a differential swerve robot using limited Lego electronics and an EV3
