@@ -1,143 +1,105 @@
-#include <iostream>
-#include <algorithm>
-#include <stdio.h>
-#include <time.h>
-#include <fstream>
-using namespace std;
- 
-// Defining important variables as global to 
-// access them from different functions
-double kp, ki, kd, midpoint, integral,
-lastError, derivative, turn, lightValue, error;
+#include "PID.h"
 
-ofstream file, pairsOutput;
-ifstream file_;
-
-// generates random number to start the robot on
-double getLightValue() {
-    return (rand()%100)+1;
-}
-
-// Main Menu (for command line tool purposes)
-void menu() {
-    cout << "Choose the mode: " << "\n";
-    cout << "1- Proportional Controller." << "\n";
-    cout << "2- Proportional-Integral Controller." << "\n";
-    cout << "3- Proportional-Integral-Derivative Controller." << "\n";
-    cout << "*************************" << "\n";
-}
-
-// Opens the files depending on the choice
-// DONT FORGET TO CHANGE THE FILE PATH
-void choose(int x) {
-    if (x == 1) {
-        cout << "Kp = ";
-        cin >> kp;
-        cout << "Midpoint = "; cin >> midpoint;
-        file.open("/Users/Mohammed/Desktop/PID Simulator/OUTPUT_P.txt");
-    } else if (x == 2) {
-        cout << "Kp = "; cin >> kp;
-        cout << "Ki = "; cin >> ki;
-        cout << "Midpoint = "; cin >> midpoint;
-        file.open("/Users/Mohammed/Desktop/PID Simulator/OUTPUT_PI.txt");
-    } else if (x == 3) {
-        cout << "Kp = "; cin >> kp;
-        cout << "Ki = "; cin >> ki;
-        cout << "Kd = "; cin >> kd;
-        cout << "Midpoint = "; cin >> midpoint;
-        file.open("/Users/Mohammed/Desktop/PID Simulator/OUTPUT_PID.txt");
-    } else {
-        throw "ERROR";
-        return;
-    }
-}
-
-// Generates the output as pairs to easen the process of graphing 
-// the result using a plot grapher
-// DONT FORGET TO CHANGE THE FILE PATH
-void generatePairs(int x) {
-    if (x == 1) {
-        file_.open("/Users/Mohammed/Desktop/PID Simulator/OUTPUT_P.txt");
-        pairsOutput.open("/Users/Mohammed/Desktop/PID Simulator/pairsGenerated.txt");
-        string s; int y = 2;
-        while (getline(file_, s)) {
-            if (s[0] == '/') {
-                continue;
-            }
-            pairsOutput << y << ", " << s << "\n";
-            y += 2;
-        }
-    } else if (x == 2) {
-        file_.open("/Users/Mohammed/Desktop/PID Simulator/OUTPUT_PI.txt");
-        pairsOutput.open("/Users/Mohammed/Desktop/PID Simulator/pairsGenerated2.txt");
-        string s; int y = 2;
-        while (getline(file_, s)) {
-            if (s[0] == '/') {
-                continue;
-            }
-            pairsOutput << y << ", " << s << "\n";
-            y += 2;
-        }
-    } else if (x == 3) {
-        file_.open("/Users/Mohammed/Desktop/PID Simulator/OUTPUT_PID.txt");
-        pairsOutput.open("/Users/Mohammed/Desktop/PID Simulator/pairsGenerated3.txt");
-        string s; int y = 2;
-        while (getline(file_, s)) {
-            if (s[0] == '/') {
-                continue;
-            }
-            pairsOutput << y << ", " << s << "\n";
-            y += 2;
-        }
-    } else {
-        throw "ERROR"; return;
-    }
-}
-
-int main() {
-    srand((unsigned int)time(NULL));
-    menu();
-    int x; cin >> x;
-    choose(x); 
+PID::PID(double SP, double ct){
     
-    //kp = 0.7; ki = 0.04; kd = 3;
-    //midpoint = 30;
-    integral = lastError = derivative = 0;
+    Kp = 0.00;
+    Ki = 0.00;
+    Kd = 0.00;
     
-    lightValue = getLightValue();
-    //lightValue = 66; //Uncomment this to test on a specific value.
+    SampleTime = 0.00;
+
+    current_time = ct;
+    last_time = current_time;
     
-    for (;true;) {
-        cout << "Light Value = " << lightValue << "\n";
-        file << lightValue << "\n";
-        
-        error = lightValue - midpoint;
-        cout << "Error = " << error << "\n";
-        
-        integral += error;
-        cout << "Integral = " << integral << "\n";
-        
-        derivative = error - lastError;
-        cout << "Derivative = " << derivative << "\n";
-        
-        turn = (kp*error) + (ki*integral) + (kd*derivative);
-        cout << "Turn = " << turn << "\n";
-        
-        if (turn > 0) {
-            lightValue -= turn/5;
-        } else {
-            lightValue += (turn*-1)/5;
-        }
-        
-        lastError = error;
-        cout << "Last Error = " << lastError << "\n";
-        
-        cout << "******************************" << "\n" << "\n";
-        
-        if (error == 0 || turn > 5000 || turn < -5000) {
-            break;
-        }
-    }
-    generatePairs(x);
-    return 0;
+    SetPoint = SP;
+    
+	maxREF = 0.00;
+	minREF = 0.00;
+	
+    clear();
 }
+
+PID::PID(double P, double I, double D, double SP, double ct){
+    
+    Kp = P;
+    Ki = I;
+    Kd = D;
+    
+    SampleTime = 0.00;
+
+    current_time = ct;
+    last_time = current_time;
+    
+    SetPoint = SP;
+    
+	maxREF = 0.00;
+	minREF = 0.00;
+	
+    clear();
+}
+
+void PID::clear(){
+    
+    /*clears PID computations and coefficients*/
+    
+    PTerm = 0.00;
+    ITerm = 0.00;
+    DTerm = 0.00;
+    last_error = 0.00;
+    
+    /*Windup Guard*/
+    windup_guard = GUARD;
+    
+    cnt = 0;
+
+    output = 0.00;
+    
+}
+
+void PID::parameter(double Kpc, double tc){
+    Kp = 0.6 * Kpc;
+    //Ki = Kp/(0.5 * tc);
+    Ki = 0;
+    Kd = Kp * 0.125 * tc;
+}
+
+double PID::update(double feedback_value, double ct){
+    /*Calculate error with calibration*/
+	if(minREF || maxREF != 0.00)
+		error = SetPoint - (MAX_VAL * (feedback_value - minREF) / (maxREF - minREF));
+    else
+		error = SetPoint - feedback_value;
+	
+    current_time = ct;
+    delta_time =  current_time - last_time;
+    delta_error = error - last_error;
+    if (delta_time >= SampleTime){
+        PTerm = Kp * error;
+        ITerm += error * delta_time;
+            
+        if(ITerm < -windup_guard)
+            ITerm = -windup_guard;
+        else if(ITerm > windup_guard)
+            ITerm = windup_guard;
+            
+        DTerm = 0.00;
+        if(delta_time > 0)
+            DTerm = delta_error / delta_time;
+            
+        /*Remember last time and last error for next calculation*/
+        last_time = current_time;
+        
+        last_error = error;
+            
+        output = PTerm + (Ki * ITerm) + (Kd * DTerm);
+    }
+    return output;
+}
+
+void PID::setSampleTime(double st){
+    SampleTime = st;
+}
+
+void PID::setRefMinMax(double min, double max){
+	minREF = min;
+    maxREF = max;

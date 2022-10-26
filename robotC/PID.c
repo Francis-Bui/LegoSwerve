@@ -54,7 +54,7 @@ task pidController()
     while(true)
         {
         // Is PID control active ?
-        if( pidRunning )
+        if(pidRunning)
             {
             // Read the sensor value and scale
             pidSensorCurrentValue = SensorValue[PID_SENSOR_INDEX] * PID_SENSOR_SCALE;
@@ -82,9 +82,9 @@ task pidController()
             pidDrive = (pid_Kp * pidError) + (pid_Ki * pidIntegral) + (pid_Kd * pidDerivative);
 
             // limit drive
-            if( pidDrive > PID_DRIVE_MAX )
+            if(pidDrive > PID_DRIVE_MAX)
                 pidDrive = PID_DRIVE_MAX;
-            if( pidDrive < PID_DRIVE_MIN )
+            if(pidDrive < PID_DRIVE_MIN)
                 pidDrive = PID_DRIVE_MIN;
 
             // send to motor
