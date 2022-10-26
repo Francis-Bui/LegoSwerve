@@ -1,3 +1,7 @@
 {
-    "pros.showInstallOnStartup": false
+    "pros.showInstallOnStartup": false,
+    "files.associations": {
+        "cmath": "c",
+        "cstdlib": "c"
+    }
 }
