@@ -5,6 +5,7 @@
 float moduleAngleSpeed[2];
 float wheelDriveSpeed[4];
 
+struct Kinematics;
 
 float getWheelAngles() 
 {   
