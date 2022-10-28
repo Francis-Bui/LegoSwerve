@@ -7,8 +7,8 @@ float wheelDriveSpeed[4];
 
 struct Kinematics;
 
-float getWheelAngles() 
-{   
+float getWheelAngles()
+{
     float wheelAngles[2];
     wheelAngles[0] = moduleAngleSpeed[0];
     wheelAngles[1] = moduleAngleSpeed[1];
@@ -16,7 +16,7 @@ float getWheelAngles()
     return *wheelAngles;
 }
 
-float getWheelVelocities() 
+float getWheelVelocities()
 {
     float wheelVelocities[2];
     wheelVelocities[0] = wheelDriveSpeed[1];
@@ -24,17 +24,17 @@ float getWheelVelocities()
     return *wheelVelocities;
 }
 
-void scalePowers() 
+void scalePowers()
 {
     float maxPower = 0;
-    for (int i = 0; i < 2; i++) 
+    for (int i = 0; i < 2; i++)
     {
         if (fabs(wheelDriveSpeed[0]) > maxPower)
             maxPower = fabs(wheelDriveSpeed[0]);
         if (fabs(wheelDriveSpeed[1]) > maxPower)
             maxPower = fabs(wheelDriveSpeed[1]);
     }
-    if (maxPower > 1.0) 
+    if (maxPower > 1.0)
     {
         wheelDriveSpeed[0] /= maxPower;
         wheelDriveSpeed[1] /= maxPower;
@@ -43,7 +43,7 @@ void scalePowers()
 
 void calculateKinematics(float rotationPower, float strafePower, float forwardPower)
 {
-    if (rotationPower != 0 || strafePower != 0 || forwardPower != 0) 
+    if (rotationPower != 0 || strafePower != 0 || forwardPower != 0)
     {
 
         float v1X = strafePower;
@@ -61,4 +61,3 @@ void calculateKinematics(float rotationPower, float strafePower, float forwardPo
         scalePowers();
     }
 }
-
