@@ -1,7 +1,5 @@
 #include "PID.c"
 
-
-
 struct SwerveModule{
 	int motorOneIndex;
 	int motorTwoIndex;
@@ -13,9 +11,6 @@ struct SwerveModule{
 	struct PIDController controllerTwo;
 }
 
-void initModule(struct SwerveModule *swerve);
-void setAngle(struct SwerveModule *swerve, float angle);
-void setSpeed(struct SwerveModule *swerve, float speed);
 
 void setPower(struct SwerveModule *swerve,float motorOneP, float motorTwoP)
 {
@@ -23,11 +18,18 @@ void setPower(struct SwerveModule *swerve,float motorOneP, float motorTwoP)
 	motor[swerve -> motorTwoIndex] = motorTwoP;
 }
 
-void initModule(struct SwerveModule *swerve)
-{}
+void initModule(struct SwerveModule *swerve, int motorOneIndexIn, int motorTwoIndexIn)
+{
+	swerve -> motorOneIndex = motorOneIndexIn;
+	swerve -> motorTwoIndex = motorTwoIndexIn;
+}
 
 void setAngle(struct SwerveModule *swerve, float angle)
-{}
+{
+	swerve -> targetAngle = angle;
+}
 
 void setSpeed(struct SwerveModule *swerve, float speed)
-{}
+{
+	swerve -> targetSpeed = speed;
+}
