@@ -97,7 +97,7 @@ float PID_calculateDrive(struct PIDController *controller, float error)
 }
 
 
-task motorPIDController() //TODO: turn pid controller into "object" to call multiple instances for angle,distance,etc/etc
+task motorPIDController()
 {
     while(true)
         {

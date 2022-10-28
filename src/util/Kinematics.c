@@ -1,27 +1,27 @@
 #include "Constants.c"
-#include <stdlib.h>
-#include <math.h>
+
+float hypot(float x, float y);
 
 float moduleAngleSpeed[2];
 float wheelDriveSpeed[4];
 
 struct Kinematics;
 
-float getWheelAngles()
+float* getWheelAngles()
 {
     float wheelAngles[2];
     wheelAngles[0] = moduleAngleSpeed[0];
     wheelAngles[1] = moduleAngleSpeed[1];
 
-    return *wheelAngles;
+    return &wheelAngles;
 }
 
-float getWheelVelocities()
+float* getWheelVelocities()
 {
     float wheelVelocities[2];
     wheelVelocities[0] = wheelDriveSpeed[1];
     wheelVelocities[1] = wheelDriveSpeed[3];
-    return *wheelVelocities;
+    return &wheelVelocities;
 }
 
 void scalePowers()
@@ -60,4 +60,9 @@ void calculateKinematics(float rotationPower, float strafePower, float forwardPo
 
         scalePowers();
     }
+}
+
+float hypot(float x, float y)
+{
+	return sqrt(pow(x,2) + pow(y,2));
 }
