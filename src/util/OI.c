@@ -59,30 +59,30 @@ IRState getIRState(void)
 
 		switch(IRButton)
 		{
-		case 0:
-			return nonePressed;
-		case 1:
-			return forwardLeft;
-		case 2:
-			return backLeft;
-		case 3:
-			return forwardRight;
-		case 4:
-			return backRight;
-		case 5:
-			return forwardFull;
-		case 6:
-			return spinRight;
-		case 7:
-			return spinLeft;
-		case 8:
-			return backFull;
-		case 9:
-			return beaconState;
-		case 10:
-			return leftFull;
-		case 11:
-			return rightFull;
+            case 0:
+                return nonePressed;
+            case 1:
+                return forwardLeft;
+            case 2:
+                return backLeft;
+            case 3:
+                return forwardRight;
+            case 4:
+                return backRight;
+            case 5:
+                return forwardFull;
+            case 6:
+                return spinRight;
+            case 7:
+                return spinLeft;
+            case 8:
+                return backFull;
+            case 9:
+                return beaconState;
+            case 10:
+                return leftFull;
+            case 11:
+                return rightFull;
 		}
 	}
 }
