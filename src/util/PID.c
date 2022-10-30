@@ -95,12 +95,3 @@ task motorPIDController()
       wait1Msec( 25 );
     }
 }
-
-task main()
-{
-    // send the motor off somewhere
-    pidRequestedValue = 1000;
-
-    // start the PID task
-    startTask(motorPIDController);
-}

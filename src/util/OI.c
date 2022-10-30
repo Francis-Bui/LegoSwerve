@@ -86,4 +86,3 @@ IRState getIRState(void)
 		}
 	}
 }
-
