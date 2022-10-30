@@ -9,7 +9,7 @@ struct SwerveModule{
 
 	struct PIDController controllerOne;
 	struct PIDController controllerTwo;
-}
+};
 
 
 void setPower(struct SwerveModule *swerve,float motorOneP, float motorTwoP)

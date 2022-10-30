@@ -36,7 +36,7 @@ struct PIDController{
 	float kD;
 
 	float integralLimit;
-}
+};
 
 void initPIDConstants(struct PIDController *controller, float p, float i, float d)
 {
@@ -66,10 +66,11 @@ float PID_calculateDrive(struct PIDController *controller, float error)
 		float lastError = controller -> pidLastError;
 		float drive;
 
-		if(controller -> kI != 0 && abs(error) < controller -> integralLimit)
+		if(controller -> kI != 0 && fabs(error) < controller -> integralLimit)
 			integral += error;
-	  else
-	  	integral = 0;
+		else
+			integral = 0;
+
 		controller -> pidIntegral = integral;
 
 	  derivative = error - lastError;
