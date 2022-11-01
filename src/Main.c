@@ -2,6 +2,5 @@
 
 task main()
 {
-    startTask(motorPIDController);
     startTask(Drive);
 }

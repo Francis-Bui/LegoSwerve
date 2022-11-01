@@ -48,3 +48,9 @@ float getSpeed(struct SwerveModule *swerve)
 	//swerve -> currentSpeed = (use kinematics here)
 	return swerve -> currentSpeed
 }
+
+void resetEncoders(struct SwerveModule *swerve)
+{
+	resetMotorEncoder(swerve -> motorOneIndex);
+	resetMotorEncoder(swerve -> motorTwoIndex);
+}

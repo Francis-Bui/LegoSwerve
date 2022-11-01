@@ -85,13 +85,3 @@ float PID_calculateDrive(struct PIDController *controller, float error)
 
 	  return drive;
 }
-
-
-task motorPIDController()
-{
-    while(true)
-    {
-    	// Run at 50Hz
-      wait1Msec( 25 );
-    }
-}
