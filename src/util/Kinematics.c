@@ -47,10 +47,10 @@ void calculateKinematics(float rotationPower, float strafePower, float forwardPo
     {
 
         float v1X = strafePower;
-        float v1Y = forwardPower - rotationPower * trackWidth / 2.0;
+        float v1Y = forwardPower - rotationPower * TRACK_WIDTH / 2.0;
 
         float v2X = strafePower;
-        float v2Y = forwardPower + rotationPower * trackWidth / 2.0;
+        float v2Y = forwardPower + rotationPower * TRACK_WIDTH / 2.0;
 
         moduleAngleSpeed[0] = atan2(v1Y, v1X); // module 1 angle
         wheelDriveSpeed[0] = hypot(v1Y, v1X); // module 1 speed

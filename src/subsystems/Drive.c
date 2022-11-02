@@ -14,8 +14,8 @@ void zeroModules()
 
 void fullDrive()
 {
-	setSpeed(&leftModule, maxSpeed);
-	setSpeed(&rightModule, maxSpeed);
+	setSpeed(&leftModule, MAX_SPEED);
+	setSpeed(&rightModule, MAX_SPEED);
 }
 
 void driveDist(double angle, double dist)
@@ -51,8 +51,8 @@ task Drive()
 		else if (getButtonPress(buttonRight))
 			DriveState = IDLE;
 
-		initModule(&leftModule, motorA, motorB, leftGyroPort);
-		initModule(&rightModule, motorC, motorD, rightGyroPort);
+		initModule(&leftModule, motorA, motorB, GYROPORT_L);
+		initModule(&rightModule, motorC, motorD, GYROPORT_R);
 
 		switch(DriveState)
 		{
