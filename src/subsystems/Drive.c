@@ -1,4 +1,3 @@
-#include "../util/OI.c"
 #include "../util/SwerveModule.c"
 
 struct SwerveModule leftModule;
