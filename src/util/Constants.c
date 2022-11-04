@@ -6,6 +6,44 @@ const float ANGLE_TOL = 2.0;
 const float DIST_TOL = 5.0;
 const float MAX_SPEED = 0.0;
 
+const float L_CTRL_ONE[6]= 
+{
+    0,
+    0,
+    0,
+    0,
+    1,
+    -1,
+};
+const float L_CTRL_TWO[6]= 
+{
+    0,
+    0,
+    0,
+    0,
+    1,
+    -1,
+};
+const float R_CTRL_ONE[6]= 
+{
+    0,
+    0,
+    0,
+    0,
+    1,
+    -1,
+};
+const float R_CTRL_TWO[6]= 
+{
+    0,
+    0,
+    0,
+    0,
+    1,
+    -1,
+};
+
+
 char GYROPORT_L[3] = "S1";
 char GYROPORT_R[2] = "S2";
 

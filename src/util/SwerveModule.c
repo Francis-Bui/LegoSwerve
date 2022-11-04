@@ -1,5 +1,6 @@
 #include "PID.c"
 #include "Kinematics.c"
+#include "Constants.c"
 
 struct SwerveModule{
 	int motorOneIndex;
@@ -11,8 +12,8 @@ struct SwerveModule{
 	float currentSpeed;
 	float currentAngle;
 
-	struct PIDController controllerOne;
-	struct PIDController controllerTwo;
+	struct PIDController ctrlOne;
+	struct PIDController ctrlTwo;
 };
 
 void setPower(struct SwerveModule *swerve,float motorOneP, float motorTwoP)
@@ -49,6 +50,19 @@ float getSpeed(struct SwerveModule *swerve)
 	//swerve -> currentSpeed = (use kinematics here)
 	return swerve -> currentSpeed;
 }
+
+float getMotorOneSpeed(struct SwerveModule *swerve)
+{
+	// fill
+	return 0;
+}
+
+float getMotorTwoSpeed(struct SwerveModule *swerve)
+{
+	//fill
+	return 0;
+}
+
 
 void resetEncoders(struct SwerveModule *swerve)
 {

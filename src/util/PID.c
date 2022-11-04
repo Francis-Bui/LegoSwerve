@@ -38,7 +38,8 @@ struct PIDController{
 	float integralLimit;
 };
 
-void initPIDConstants(struct PIDController *controller, float p, float i, float d)
+
+void initPIDConstants(struct PIDController *controller, float p, float i, float d, float integralLimit)
 {
 	controller -> kP = p;
 	controller -> kI = i;
@@ -52,7 +53,7 @@ void initOutputRange(struct PIDController *controller, float max, float min)
 }
 
 
-void reset(struct PIDController *controller)
+void PID_reset(struct PIDController *controller)
 {
 	controller -> pidLastError = 0;
 	controller -> pidIntegral = 0;

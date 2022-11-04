@@ -1,4 +1,6 @@
 #include "../util/SwerveModule.c"
+#include "../util/PID.c"
+#include "../util/Constants.c"
 
 struct SwerveModule leftModule;
 struct SwerveModule rightModule;
@@ -43,6 +45,24 @@ task Drive()
 {
 	DriveStates DriveState = IDLE;
 
+	initModule(&leftModule, motorA, motorB, GYROPORT_L);
+	initPIDConstants(&(leftModule.ctrlOne), L_CTRL_ONE[0], L_CTRL_ONE[1], L_CTRL_ONE[2], L_CTRL_ONE[3]);
+	initOutputRange(&(leftModule.ctrlOne), L_CTRL_ONE[4], L_CTRL_ONE[5]);
+	PID_reset(&(leftModule.ctrlOne));
+	
+	initPIDConstants(&(leftModule.ctrlTwo), L_CTRL_TWO[0], L_CTRL_TWO[1], L_CTRL_TWO[2], L_CTRL_TWO[3]);
+	initOutputRange(&(leftModule.ctrlTwo), L_CTRL_TWO[4], L_CTRL_TWO[5]);
+	PID_reset(&(leftModule.ctrlTwo));
+
+	initModule(&rightModule, motorC, motorD, GYROPORT_R);
+	initPIDConstants(&(rightModule.ctrlOne), R_CTRL_ONE[0], R_CTRL_ONE[1], R_CTRL_ONE[2], R_CTRL_ONE[3]);
+	initOutputRange(&(leftModule.ctrlOne), R_CTRL_ONE[4], R_CTRL_ONE[5]);
+	PID_reset(&(rightModule.ctrlOne));
+	
+	initPIDConstants(&(rightModule.ctrlTwo), R_CTRL_TWO[0], R_CTRL_TWO[1], R_CTRL_TWO[2], R_CTRL_TWO[3]);
+	initOutputRange(&(rightModule.ctrlTwo), R_CTRL_TWO[4], R_CTRL_TWO[5]);
+	PID_reset(&(rightModule.ctrlTwo));
+
 	while(true)
 		{
 		if (getButtonPress(buttonLeft))
@@ -50,8 +70,6 @@ task Drive()
 		else if (getButtonPress(buttonRight))
 			DriveState = IDLE;
 
-		initModule(&leftModule, motorA, motorB, GYROPORT_L);
-		initModule(&rightModule, motorC, motorD, GYROPORT_R);
 
 		switch(DriveState)
 		{
@@ -66,3 +84,40 @@ task Drive()
 		}
 	}
 }
+
+task t_LPID_ControllerOne()
+{
+	while(true)
+	{
+		float err = leftModule.targetSpeed - getMotorOneSpeed(&leftModule);
+		float drive = PID_calculateDrive(&(leftModule.ctrlOne), err);
+	}
+}
+
+task t_LPID_ControllerTwo()
+{
+	while(true)
+	{
+		float err = leftModule.targetSpeed - getMotorTwoSpeed(&leftModule);
+		float drive = PID_calculateDrive(&(leftModule.ctrlTwo), err);
+	}
+}
+
+task t_RPID_ControllerOne()
+{
+	while(true)
+	{
+		float err = rightModule.targetSpeed - getMotorOneSpeed(&rightModule);
+		float drive = PID_calculateDrive(&(rightModule.ctrlOne), err);
+	}
+}
+
+task t_RPID_ControllerTwo()
+{
+	while(true)
+	{
+		float err = rightModule.targetSpeed - getMotorTwoSpeed(&rightModule);
+		float drive = PID_calculateDrive(&(rightModule.ctrlTwo), err);
+	}
+}
+
