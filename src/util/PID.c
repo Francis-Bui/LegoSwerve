@@ -39,14 +39,14 @@ struct PIDController{
 };
 
 
-void initPIDConstants(struct PIDController *controller, float p, float i, float d, float integralLimit)
+void PID_initPIDConstants(struct PIDController *controller, float p, float i, float d, float integralLimit)
 {
 	controller -> kP = p;
 	controller -> kI = i;
 	controller -> kD = d;
 }
 
-void initOutputRange(struct PIDController *controller, float max, float min)
+void PID_initOutputRange(struct PIDController *controller, float max, float min)
 {
 	controller -> maxOutput = max;
 	controller -> minOutput = min;
