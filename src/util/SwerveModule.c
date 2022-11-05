@@ -1,6 +1,5 @@
 #include "PID.c"
 #include "Kinematics.c"
-#include "Constants.c"
 
 struct SwerveModule{
 	int motorOneIndex;
