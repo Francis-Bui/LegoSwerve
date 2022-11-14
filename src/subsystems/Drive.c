@@ -1,8 +1,8 @@
 #include "../util/SwerveModule.c"
 
 
-struct SwerveModule leftModule;
-struct SwerveModule rightModule;
+SwerveModule leftModule;
+SwerveModule rightModule;
 
 double getDistance();
 

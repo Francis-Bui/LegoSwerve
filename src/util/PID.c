@@ -37,30 +37,31 @@ struct PIDController{
 
 	float integralLimit;
 };
+typedef struct PIDController PIDController;
 
 
-void PID_initPIDConstants(struct PIDController *controller, float p, float i, float d, float integralLimit)
+void PID_initPIDConstants(PIDController *controller, float p, float i, float d, float integralLimit)
 {
 	controller -> kP = p;
 	controller -> kI = i;
 	controller -> kD = d;
 }
 
-void PID_initOutputRange(struct PIDController *controller, float max, float min)
+void PID_initOutputRange(PIDController *controller, float max, float min)
 {
 	controller -> maxOutput = max;
 	controller -> minOutput = min;
 }
 
 
-void PID_reset(struct PIDController *controller)
+void PID_reset(PIDController *controller)
 {
 	controller -> pidLastError = 0;
 	controller -> pidIntegral = 0;
 	controller -> pidDerivative = 0;
 }
 
-float PID_calculateDrive(struct PIDController *controller, float error)
+float PID_calculateDrive(PIDController *controller, float error)
 {
 		float integral = controller -> pidIntegral;
 		float derivative = controller -> pidDerivative;
