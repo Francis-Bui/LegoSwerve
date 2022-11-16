@@ -4,7 +4,6 @@
 SwerveModule leftModule;
 SwerveModule rightModule;
 
-double getDistance();
 
 void zeroModules()
 {
@@ -18,67 +17,63 @@ void fullDrive()
 	Swerve_setSpeed(&rightModule, MAX_SPEED);
 }
 
-void driveDist(double angle, double dist)
-{
-	Swerve_setAngle(&leftModule, angle);
-	Swerve_setAngle(&rightModule, angle);
-	while(fabs(Swerve_getAngle(&leftModule) - angle) < ANGLE_TOL && fabs(Swerve_getAngle(&rightModule) - angle) < ANGLE_TOL)
-	{}
-	Swerve_resetEncoders(&leftModule);
-	Swerve_resetEncoders(&rightModule);
-	Swerve_setSpeed(&leftModule, 1);
-	Swerve_setSpeed(&rightModule, 1);
-	while(fabs(getDistance() - dist) < DIST_TOL)
-	{}
-	Swerve_setSpeed(&leftModule, 0);
-	Swerve_setSpeed(&rightModule, 0);
-}
-
 typedef enum DriveStates
 {
 	AUTO,
 	IDLE,
 } DriveStates;
 
-task Drive()
+task main()
 {
 	DriveStates DriveState = IDLE;
 
-	Swerve_initModule(&leftModule, motorA, motorB, GYROPORT_L);
+	Swerve_initModule(&leftModule, motorA, motorB);
 	PID_initPIDConstants(&(leftModule.ctrlOne), L_CTRL_ONE[0], L_CTRL_ONE[1], L_CTRL_ONE[2], L_CTRL_ONE[3]);
 	PID_initOutputRange(&(leftModule.ctrlOne), L_CTRL_ONE[4], L_CTRL_ONE[5]);
 	PID_reset(&(leftModule.ctrlOne));
-	
+
 	PID_initPIDConstants(&(leftModule.ctrlTwo), L_CTRL_TWO[0], L_CTRL_TWO[1], L_CTRL_TWO[2], L_CTRL_TWO[3]);
 	PID_initOutputRange(&(leftModule.ctrlTwo), L_CTRL_TWO[4], L_CTRL_TWO[5]);
 	PID_reset(&(leftModule.ctrlTwo));
 
-	Swerve_initModule(&rightModule, motorC, motorD, GYROPORT_R);
+	Swerve_initModule(&rightModule, motorC, motorD);
 	PID_initPIDConstants(&(rightModule.ctrlOne), R_CTRL_ONE[0], R_CTRL_ONE[1], R_CTRL_ONE[2], R_CTRL_ONE[3]);
 	PID_initOutputRange(&(leftModule.ctrlOne), R_CTRL_ONE[4], R_CTRL_ONE[5]);
 	PID_reset(&(rightModule.ctrlOne));
-	
+
 	PID_initPIDConstants(&(rightModule.ctrlTwo), R_CTRL_TWO[0], R_CTRL_TWO[1], R_CTRL_TWO[2], R_CTRL_TWO[3]);
 	PID_initOutputRange(&(rightModule.ctrlTwo), R_CTRL_TWO[4], R_CTRL_TWO[5]);
 	PID_reset(&(rightModule.ctrlTwo));
 
-	while(true)
-		{
+
+	bool buttonPressed = true;
+	while(buttonPressed)
+	{
 		if (getButtonPress(buttonLeft))
+		{
 			DriveState = AUTO;
+			buttonPressed = false;
+		}
 		else if (getButtonPress(buttonRight))
+		{
 			DriveState = IDLE;
+			buttonPressed = false;
+		}
+	}
 
-
+	bool runDrive = true;
+	while(runDrive)
+	{
 		switch(DriveState)
 		{
 			case AUTO:
-
+				motor[motorA] = 100
+				motor[motorB] = 50;
+				wait1Msec(5000);
+				runDrive = false;
 				break;
 
 			case IDLE:
-				Swerve_setSpeed(&leftModule, 0.0);
-				Swerve_setSpeed(&rightModule, 0.0);
 				break;
 		}
 	}
@@ -119,4 +114,3 @@ task t_RPID_ControllerTwo()
 		float drive = PID_calculateDrive(&(rightModule.ctrlTwo), err);
 	}
 }
-

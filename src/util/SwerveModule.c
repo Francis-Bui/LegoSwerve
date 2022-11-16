@@ -1,10 +1,9 @@
 #include "PID.c"
 #include "Kinematics.c"
 
-struct SwerveModule{
+typedef struct SwerveModule{
 	int motorOneIndex;
 	int motorTwoIndex;
-	char gyroIndex;
 
 	float targetSpeed;
 	float targetAngle;
@@ -13,9 +12,8 @@ struct SwerveModule{
 
 	PIDController ctrlOne;
 	PIDController ctrlTwo;
-};
+} SwerveModule;
 
-typedef struct SwerveModule SwerveModule;
 
 
 void Swerve_setPower(SwerveModule *swerve,float motorOneP, float motorTwoP)
@@ -24,11 +22,10 @@ void Swerve_setPower(SwerveModule *swerve,float motorOneP, float motorTwoP)
 	motor[swerve -> motorTwoIndex] = -motorTwoP;
 }
 
-void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIndexIn, char gyroIndexIn[3])
+void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIndexIn)
 {
 	swerve -> motorOneIndex = motorOneIndexIn;
 	swerve -> motorTwoIndex = motorTwoIndexIn;
-	swerve -> gyroIndex = gyroIndexIn[3];
 }
 
 void Swerve_setAngle(SwerveModule *swerve, float angle)
@@ -41,11 +38,6 @@ void Swerve_setSpeed(SwerveModule *swerve, float speed)
 	swerve -> targetSpeed = speed;
 }
 
-float Swerve_getAngle(SwerveModule *swerve)
-{
-	swerve -> currentAngle = getGyroDegrees(swerve -> gyroIndex);
-	return (swerve -> currentAngle);
-}
 
 float Swerve_getSpeed(SwerveModule *swerve)
 {

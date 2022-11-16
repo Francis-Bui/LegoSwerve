@@ -6,7 +6,7 @@ const float ANGLE_TOL = 2.0;
 const float DIST_TOL = 5.0;
 const float MAX_SPEED = 0.0;
 
-const float L_CTRL_ONE[6]= 
+const float L_CTRL_ONE[6]=
 {
     0,
     0,
@@ -15,7 +15,7 @@ const float L_CTRL_ONE[6]=
     1,
     -1,
 };
-const float L_CTRL_TWO[6]= 
+const float L_CTRL_TWO[6]=
 {
     0,
     0,
@@ -24,7 +24,7 @@ const float L_CTRL_TWO[6]=
     1,
     -1,
 };
-const float R_CTRL_ONE[6]= 
+const float R_CTRL_ONE[6]=
 {
     0,
     0,
@@ -33,7 +33,7 @@ const float R_CTRL_ONE[6]=
     1,
     -1,
 };
-const float R_CTRL_TWO[6]= 
+const float R_CTRL_TWO[6]=
 {
     0,
     0,
@@ -44,20 +44,7 @@ const float R_CTRL_TWO[6]=
 };
 
 
-char GYROPORT_L[3] = "S1";
-char GYROPORT_R[2] = "S2";
 
 // These motors are declared here to stop vscode from glowing with errors -- remove before deployment.
-int motor[1] = {2}; 
-int motorA = 1;
-int motorB = 2;
-int motorC = 3;
-int motorD = 4;
-int buttonRight = 0;
-int buttonLeft = 0;
-typedef unsigned char task;
-
-typedef int bool;
 #define true 1
 #define false 0
-
