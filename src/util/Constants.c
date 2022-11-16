@@ -46,5 +46,19 @@ const float R_CTRL_TWO[6]=
 
 
 // These motors are declared here to stop vscode from glowing with errors -- remove before deployment.
+
+/*
+int motor[1] = {2}; 
+int motorA = 1;
+int motorB = 2;
+int motorC = 3;
+int motorD = 4;
+int buttonRight = 0;
+int buttonLeft = 0;
+typedef unsigned char task;
+
+typedef int bool;
+*/
+
 #define true 1
 #define false 0
