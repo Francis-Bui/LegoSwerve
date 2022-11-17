@@ -5,7 +5,7 @@ typedef struct SwerveModule{
 	int motorOneIndex;
 	int motorTwoIndex;
 
-	
+
 	float targetAngle;
 	float targetDriveSpeed;
 	float targetAngularSpeed;
@@ -14,7 +14,7 @@ typedef struct SwerveModule{
 	float currentDriveSpeed;
 	float currentAngularSpeed;
 	float currentAngle;
-	
+
 
 	PIDController ctrlOne;
 	PIDController ctrlTwo;
@@ -49,17 +49,21 @@ void Swerve_setAngularSpeed(SwerveModule *swerve, float speed)
 	swerve -> targetAngularSpeed = speed;
 }
 
+float Swerve_getAngle(SwerveModule *swerve)
+{
+	return (getMotorEncoder(swerve -> motorOneIndex)/2.0 + getMotorEncoder(swerve -> motorTwoIndex)/2.0)/2.0
+}
 
 float Swerve_getSpeed(SwerveModule *swerve) // Returns current swerve module speed in meters per second
 {
-	swerve -> currentDriveSpeed = ((2 * PI * WHEEL_RADIUS * getMotorRPM(swerve -> motorOneIndex) * NET_GEAR_RATIO / 60) + 
+	swerve -> currentDriveSpeed = ((2 * PI * WHEEL_RADIUS * getMotorRPM(swerve -> motorOneIndex) * NET_GEAR_RATIO / 60) +
 							  (2 * PI * WHEEL_RADIUS * getMotorRPM(swerve -> motorTwoIndex) * NET_GEAR_RATIO / 60));
 	return swerve -> currentDriveSpeed;
 }
 
 float Swerve_getMotorOneSpeed(SwerveModule *swerve) // Returns meters per second of differential gear
 {
-	swerve -> motorOneSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorOneIndex) / 60); 
+	swerve -> motorOneSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorOneIndex) / 60);
 	return swerve -> motorOneSpeed;
 }
 

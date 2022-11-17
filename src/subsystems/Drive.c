@@ -13,8 +13,6 @@ void zeroModules()
 
 void fullDrive()
 {
-	Swerve_setSpeed(&leftModule, MAX_SPEED);
-	Swerve_setSpeed(&rightModule, MAX_SPEED);
 }
 
 typedef enum DriveStates
@@ -62,9 +60,13 @@ task main()
 	}
 
 	bool runDrive = true;
+	Swerve_resetEncoders(&leftModule);
+	moveMotorTarget(motorA, 360, 100);
+	moveMotorTarget(motorB, -360, -100);
+
 	while(runDrive)
 	{
-		switch(DriveState)
+		/*switch(DriveState)
 		{
 			case AUTO:
 				motor[motorA] = 10
@@ -75,7 +77,8 @@ task main()
 
 			case IDLE:
 				break;
-		}
+		}*/
+
 	}
 }
 
@@ -83,7 +86,7 @@ task t_LPID_ControllerOne()
 {
 	while(true)
 	{
-		float err = leftModule.targetSpeed - Swerve_getMotorOneSpeed(&leftModule);
+		float err = leftModule.targetDriveSpeed - Swerve_getMotorOneSpeed(&leftModule);
 		float drive = PID_calculateDrive(&(leftModule.ctrlOne), err);
 	}
 }
@@ -92,7 +95,7 @@ task t_LPID_ControllerTwo()
 {
 	while(true)
 	{
-		float err = leftModule.targetSpeed - Swerve_getMotorTwoSpeed(&leftModule);
+		float err = leftModule.targetDriveSpeed - Swerve_getMotorTwoSpeed(&leftModule);
 		float drive = PID_calculateDrive(&(leftModule.ctrlTwo), err);
 	}
 }
@@ -101,7 +104,7 @@ task t_RPID_ControllerOne()
 {
 	while(true)
 	{
-		float err = rightModule.targetSpeed - Swerve_getMotorOneSpeed(&rightModule);
+		float err = rightModule.targetDriveSpeed - Swerve_getMotorOneSpeed(&rightModule);
 		float drive = PID_calculateDrive(&(rightModule.ctrlOne), err);
 	}
 }
@@ -110,7 +113,7 @@ task t_RPID_ControllerTwo()
 {
 	while(true)
 	{
-		float err = rightModule.targetSpeed - Swerve_getMotorTwoSpeed(&rightModule);
+		float err = rightModule.targetDriveSpeed - Swerve_getMotorTwoSpeed(&rightModule);
 		float drive = PID_calculateDrive(&(rightModule.ctrlTwo), err);
 	}
 }

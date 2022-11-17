@@ -4,6 +4,7 @@ const float DIFF_TO_WHEEL = 3.50;
 const float NET_GEAR_RATIO = 1.75;
 const float TRACK_WIDTH = 10.0; //radius * cos(pi/4);
 const float WHEEL_BASE = 10.0; //radius * sin(pi/4)
+const float ENCODER_TO_ANGLE = 360/2.0;
 
 const float ANGLE_TOL = 2.0;
 const float DIST_TOL = 5.0;
