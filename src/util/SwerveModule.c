@@ -62,7 +62,7 @@ void Swerve_setDriveSpeed(SwerveModule *swerve, float speed) // set drive speed 
 
 float Swerve_getAngle(SwerveModule *swerve)
 {
-	swerve -> currentAngle = (getMotorEncoder(swerve -> motorOneIndex)/ 2.0 - getMotorEncoder(swerve -> motorTwoIndex)/ 2.0) / 2.0;
+	swerve -> currentAngle = (getMotorEncoder(swerve -> motorOneIndex)/ 2.0 - getMotorEncoder(swerve -> motorTwoIndex) / 2.0) / 2.0;
 	return swerve -> currentAngle;
 }
 

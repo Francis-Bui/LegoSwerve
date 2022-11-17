@@ -60,9 +60,9 @@ task main()
 	}
 
 	bool runDrive = true;
-	Swerve_resetEncoders(&leftModule);
-	moveMotorTarget(motorA, 360, 100);
-	moveMotorTarget(motorB, -360, -100);
+
+	Swerve_setAngleRelative(&leftModule, 90.0);
+	displayCenteredBigTextLine("%f", Swerve_getAngle(&leftModule));
 
 	while(runDrive)
 	{
