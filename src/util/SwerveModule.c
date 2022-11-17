@@ -73,6 +73,34 @@ float Swerve_getSpeed(SwerveModule *swerve) // Returns current swerve module spe
 	return swerve -> currentDriveSpeed;
 }
 
+//distance in cms
+float Swerve_getDist(SwerveModule *swerve)
+{
+	return Swerve_getDistOne(swerve) + Swerve_getDistTwo(swerve);
+}
+
+float Swerve_getDistOne(SwerveModule *swerve)
+{
+	return getMotorEncoder(swerve -> motorOneIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS / 10.0;
+}
+
+float Swerve_getDistTwo(SwerveModule *swerve)
+{
+	//multiply by negative one to account for negative encoder counts
+	return getMotorEncoder(swerve -> motorTwoIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS / 10.0 *-1;
+}
+
+//Takes in a distance in cm, speed in m/s
+void Swerve_driveDist(SwerveModule *swerve, float distance, float speed)
+{
+	int direction = (distance >= 0) ? 1 : -1; 
+	Swerve_resetEncoders(swerve);
+	Swerve_setDriveSpeed(swerve, 0.5*direction);
+	while(fabs(Swerve_getDist()) < fabs(distance))
+	{}
+	Swerve_setDriveSpeed(swerve, 0);
+}
+
 /* code for when we do full kinematics base swerve
 
 float Swerve_getMotorOneSpeed(SwerveModule *swerve) // Returns meters per second of differential gear
