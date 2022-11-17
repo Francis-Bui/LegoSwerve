@@ -13,6 +13,10 @@ const float ANGLE_TOL = 2.0;
 const float DIST_TOL = 5.0;
 const float MAX_SPEED = 0.0;
 
+// AUTO CONSTANTS
+
+const int PATH_ONE_LEN = 13;
+const int PATH_ONE_HEIGHT = 2;
 
 const float L_CTRL_ONE[6]=
 {

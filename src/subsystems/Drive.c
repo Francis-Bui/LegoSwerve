@@ -7,8 +7,8 @@ SwerveModule rightModule;
 
 void zeroModules()
 {
-	Swerve_setAngle(&leftModule, 0.0);
-	Swerve_setAngle(&rightModule, 0.0);
+	Swerve_setAngleAbsolute(&leftModule, 0.0);
+	Swerve_setAngleAbsolute(&rightModule, 0.0);
 }
 
 void fullDrive()
