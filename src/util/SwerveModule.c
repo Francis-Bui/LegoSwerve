@@ -5,8 +5,10 @@ typedef struct SwerveModule{
 	int motorOneIndex;
 	int motorTwoIndex;
 
-	float targetSpeed;
+	
 	float targetAngle;
+	float targetDriveSpeed;
+	float targetAngularSpeed;
 	float motorOneSpeed;
 	float motorTwoSpeed;
 	float currentDriveSpeed;
@@ -37,9 +39,14 @@ void Swerve_setAngle(SwerveModule *swerve, float angle)
 	swerve -> targetAngle = angle;
 }
 
-void Swerve_setSpeed(SwerveModule *swerve, float speed)
+void Swerve_setDriveSpeed(SwerveModule *swerve, float speed)
 {
-	swerve -> targetSpeed = speed;
+	swerve -> targetDriveSpeed = speed;
+}
+
+void Swerve_setAngularSpeed(SwerveModule *swerve, float speed)
+{
+	swerve -> targetAngularSpeed = speed;
 }
 
 
