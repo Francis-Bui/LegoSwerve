@@ -34,9 +34,19 @@ void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIn
 	swerve -> motorTwoIndex = motorTwoIndexIn;
 }
 
-void Swerve_setAngle(SwerveModule *swerve, float angle)
+void Swerve_setAngleRelative(SwerveModule *swerve, float angle)
 {
-	swerve -> targetAngle = angle;
+	swerve -> targetAngle = angle * 2.0; // multiply by 2 to account for 1:2 gear ratio
+
+	setMotorSyncEncoder(swerve -> motorOneIndex, swerve -> motorTwoIndex, -ANGULAR_SPEED, swerve -> targetAngle, ANGULAR_SPEED);	
+}
+
+void Swerve_setAngleAbsolute(SwerveModule *swerve, float angle)
+{
+	swerve -> targetAngle = angle * 2.0; // multiply by 2 to account for 1:2 gear ratio
+
+	setMotorTarget(swerve -> motorOneIndex, swerve -> targetAngle, ANGULAR_SPEED);
+	setMotorTarget(swerve -> motorTwoIndex, swerve -> targetAngle, -ANGULAR_SPEED);
 }
 
 void Swerve_setDriveSpeed(SwerveModule *swerve, float speed)
