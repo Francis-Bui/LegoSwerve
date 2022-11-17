@@ -68,7 +68,7 @@ task main()
 		{
 			case AUTO:
 				motor[motorA] = 100
-				motor[motorB] = 50;
+				motor[motorB] = -100;
 				wait1Msec(5000);
 				runDrive = false;
 				break;
