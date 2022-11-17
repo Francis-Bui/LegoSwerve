@@ -101,7 +101,7 @@ void Swerve_driveDist(SwerveModule *swerve, float distance, float speed)
 	Swerve_setDriveSpeed(swerve, 0);
 }
 
-/* code for when we do full kinematics base swerve
+// code for when we do full kinematics base swerve
 
 float Swerve_getMotorOneSpeed(SwerveModule *swerve) // Returns meters per second of differential gear
 {
@@ -132,5 +132,3 @@ void Swerve_setAngularSpeed(SwerveModule *swerve, float speed)
 {
 	swerve -> targetAngularSpeed = speed;
 }
-
-*/
