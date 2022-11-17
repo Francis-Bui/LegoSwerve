@@ -67,9 +67,9 @@ task main()
 		switch(DriveState)
 		{
 			case AUTO:
-				motor[motorA] = 100
-				motor[motorB] = -100;
-				wait1Msec(5000);
+				motor[motorA] = 37.5
+				motor[motorB] = -37.5;
+				wait1Msec(300);
 				runDrive = false;
 				break;
 

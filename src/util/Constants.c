@@ -1,5 +1,6 @@
 const float GEAR_RADIUS = 52.3875; // Differential Gear OD is 4.125in, radius is 52.3875mm
 const float WHEEL_RADIUS = 33.3375;
+const float DIFF_TO_WHEEL = 3.50;
 const float NET_GEAR_RATIO = 1.75;
 const float TRACK_WIDTH = 10.0; //radius * cos(pi/4);
 const float WHEEL_BASE = 10.0; //radius * sin(pi/4)

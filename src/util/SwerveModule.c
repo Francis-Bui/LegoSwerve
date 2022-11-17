@@ -9,8 +9,10 @@ typedef struct SwerveModule{
 	float targetAngle;
 	float motorOneSpeed;
 	float motorTwoSpeed;
-	float currentSpeed;
+	float currentDriveSpeed;
+	float currentAngularSpeed;
 	float currentAngle;
+	
 
 	PIDController ctrlOne;
 	PIDController ctrlTwo;
@@ -43,9 +45,9 @@ void Swerve_setSpeed(SwerveModule *swerve, float speed)
 
 float Swerve_getSpeed(SwerveModule *swerve) // Returns current swerve module speed in meters per second
 {
-	swerve -> currentSpeed = ((2 * PI * WHEEL_RADIUS * getMotorRPM(swerve -> motorOneIndex) * NET_GEAR_RATIO / 60) + 
+	swerve -> currentDriveSpeed = ((2 * PI * WHEEL_RADIUS * getMotorRPM(swerve -> motorOneIndex) * NET_GEAR_RATIO / 60) + 
 							  (2 * PI * WHEEL_RADIUS * getMotorRPM(swerve -> motorTwoIndex) * NET_GEAR_RATIO / 60));
-	return swerve -> currentSpeed;
+	return swerve -> currentDriveSpeed;
 }
 
 float Swerve_getMotorOneSpeed(SwerveModule *swerve) // Returns meters per second of differential gear
@@ -60,7 +62,18 @@ float Swerve_getMotorTwoSpeed(SwerveModule *swerve)
 	return swerve -> motorTwoSpeed;
 }
 
+float Swerve_getAngularSpeed(SwerveModule *swerve)
+{
+	swerve -> currentAngularSpeed = (-Swerve_getMotorOneSpeed(swerve) + (3 * Swerve_getMotorTwoSpeed(swerve))) / 2;
+	return swerve -> currentAngularSpeed;
+}
 
+float Swerve_getDriveSpeed(SwerveModule *swerve)
+{
+	swerve -> currentDriveSpeed = ((Swerve_getMotorOneSpeed(swerve) - Swerve_getMotorTwoSpeed(swerve)) / GEAR_RADIUS) * DIFF_TO_WHEEL * WHEEL_RADIUS;
+
+	return swerve -> currentDriveSpeed;
+}
 void Swerve_resetEncoders(SwerveModule *swerve)
 {
 	resetMotorEncoder(swerve -> motorOneIndex);
