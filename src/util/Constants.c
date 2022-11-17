@@ -7,6 +7,8 @@ const float WHEEL_BASE = 10.0; //radius * sin(pi/4)
 const float ENCODER_TO_ANGLE = 360/2.0;
 const float ANGULAR_SPEED = 100.0;
 
+const float POWER_RATE = 96.49; // rate of motor power to top speed.
+
 const float ANGLE_TOL = 2.0;
 const float DIST_TOL = 5.0;
 const float MAX_SPEED = 0.0;
