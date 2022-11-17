@@ -15,8 +15,8 @@ const float MAX_SPEED = 0.0;
 
 // AUTO CONSTANTS
 
-const int PATH_ONE_LEN = 13;
-const int PATH_ONE_HEIGHT = 2;
+const int PATH_LEN = 13;
+const int PATH_HEIGHT = 2;
 
 const float L_CTRL_ONE[6]=
 {

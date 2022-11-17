@@ -1,8 +1,8 @@
 #include "../subsystems/Drive.c"
 
-const float PATH_ONE[PATH_ONE_LEN][PATH_ONE_HEIGHT] = 
+const float PATH_ONE[13][2] = 
 {
-    // drive distance in centemeters
+    // drive distance in centimeters per second
     [0][0] = 5,
     [1][0] = 5,
     [2][0] = 5,
@@ -32,4 +32,4 @@ const float PATH_ONE[PATH_ONE_LEN][PATH_ONE_HEIGHT] =
     [11][1] = 5,
     [12][1] = 5,
 
-}
+};
