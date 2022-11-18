@@ -8,6 +8,10 @@ typedef struct SwerveModule{
 
 	float targetAngle;
 	float targetDriveSpeed;
+
+	float targetMotorOneSpeed;
+	float targetMotorTwoSpeed;
+
 	float targetAngularSpeed;
 	float motorOneSpeed;
 	float motorTwoSpeed;
@@ -33,10 +37,15 @@ void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIn
 	Swerve_resetEncoders(swerve);
 }
 
-void Swerve_setPower(SwerveModule *swerve,float motorOneP, float motorTwoP)
+void Swerve_setMotOneTarget(SwerveModule *swerve, float target)
 {
-	motor[swerve -> motorOneIndex] = motorOneP;
-	motor[swerve -> motorTwoIndex] = -motorTwoP;
+	//set targets in rpms
+	swerve -> targetMotorOneSpeed = target;
+}
+
+void Swerve_setMotTwoTarget(SwerveModule *swerve, float target)
+{
+	swerve -> targetMotorTwoSpeed = target;
 }
 
 void Swerve_setAngleRelative(SwerveModule *swerve, float angle)
@@ -97,14 +106,16 @@ float Swerve_getDist(SwerveModule *swerve)
 
 float Swerve_getMotorOneSpeed(SwerveModule *swerve) // Returns meters per second of differential gear
 {
-	swerve -> motorOneSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorOneIndex) / 60);
-	return swerve -> motorOneSpeed;
+	// swerve -> motorOneSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorOneIndex) / 60);
+	// return swerve -> motorOneSpeed;
+	return getMotorRPM(swerve -> motorOneIndex);
 }
 
 float Swerve_getMotorTwoSpeed(SwerveModule *swerve)
 {
-	swerve -> motorTwoSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorTwoIndex) / 60);
-	return swerve -> motorTwoSpeed;
+	// swerve -> motorTwoSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorTwoIndex) / 60);
+	// return swerve -> motorTwoSpeed;
+	return getMotorRPM(swerve -> motorTwoIndex);
 }
 
 float Swerve_getAngularSpeed(SwerveModule *swerve)

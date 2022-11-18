@@ -62,25 +62,20 @@ task main()
 
 	bool runDrive = true;
 
-	Drive_driveDist(&leftModule, &rightModule, 500, 100);
 	//Swerve_setAngleRelative(&leftModule, 360.0);
+	Swerve_setMotOneTarget(&rightModule, 50);
+	Swerve_setMotTwoTarget(&leftModule, 50);
+	startTask(t_RPID_ControllerOne);
+	startTask(t_RPID_ControllerTwo);
 
-
+	clearDebugStream();
 	while(runDrive)
 	{
-		/*switch(DriveState)
+		if(getAvailSpaceInDebugStream() <= 100)
 		{
-			case AUTO:
-				motor[motorA] = 10
-				motor[motorB] = -5;
-				wait1Msec(300);
-				runDrive = false;
-				break;
-
-			case IDLE:
-				break;
-		}*/
-
+			clearDebugStream();
+		}
+		writeDebugStreamLine("Motor one %f, Motor Two %f", Swerve_getMotorOneSpeed(&rightModule), Swerve_getMotorTwoSpeed(&rightModule));
 	}
 }
 
@@ -105,30 +100,13 @@ void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, fl
 }
 
 
-task t_LPID_ControllerOne()
-{
-	while(true)
-	{
-		float err = leftModule.targetDriveSpeed - Swerve_getMotorOneSpeed(&leftModule);
-		float drive = PID_calculateDrive(&(leftModule.ctrlOne), err);
-	}
-}
-
-task t_LPID_ControllerTwo()
-{
-	while(true)
-	{
-		float err = leftModule.targetDriveSpeed - Swerve_getMotorTwoSpeed(&leftModule);
-		float drive = PID_calculateDrive(&(leftModule.ctrlTwo), err);
-	}
-}
-
 task t_RPID_ControllerOne()
 {
 	while(true)
 	{
-		float err = rightModule.targetDriveSpeed - Swerve_getMotorOneSpeed(&rightModule);
+		float err = rightModule.targetMotorOneSpeed - Swerve_getMotorOneSpeed(&rightModule);
 		float drive = PID_calculateDrive(&(rightModule.ctrlOne), err);
+		setMotorSpeed(rightModule.motorOneIndex, drive);
 	}
 }
 
@@ -136,7 +114,8 @@ task t_RPID_ControllerTwo()
 {
 	while(true)
 	{
-		float err = rightModule.targetDriveSpeed - Swerve_getMotorTwoSpeed(&rightModule);
+		float err = rightModule.targetMotorTwoSpeed - Swerve_getMotorTwoSpeed(&rightModule);
 		float drive = PID_calculateDrive(&(rightModule.ctrlTwo), err);
+		setMotorSpeed(rightModule.motorTwoIndex, drive);
 	}
 }

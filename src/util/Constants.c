@@ -18,6 +18,8 @@ const float MAX_SPEED = 0.0;
 const int PATH_LEN = 13;
 const int PATH_HEIGHT = 2;
 
+//PID arrays formatted as
+// arr = {p, i ,d ,integral limit, max, min}
 const float L_CTRL_ONE[6]=
 {
     0,
@@ -42,8 +44,8 @@ const float R_CTRL_ONE[6]=
     0,
     0,
     0,
-    1,
-    -1,
+    100,
+    -100,
 };
 const float R_CTRL_TWO[6]=
 {
@@ -51,8 +53,8 @@ const float R_CTRL_TWO[6]=
     0,
     0,
     0,
-    1,
-    -1,
+    100,
+    -100,
 };
 
 
