@@ -24,12 +24,18 @@ typedef struct SwerveModule{
 	PIDController ctrlTwo;
 } SwerveModule;
 
+/*
+Reset encoders for swerve
+*/
 void Swerve_resetEncoders(SwerveModule *swerve)
 {
 	resetMotorEncoder(swerve -> motorOneIndex);
 	resetMotorEncoder(swerve -> motorTwoIndex);
 }
 
+/*
+Initialize motors for swerve
+*/
 void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIndexIn)
 {
 	swerve -> motorOneIndex = motorOneIndexIn;
@@ -37,12 +43,20 @@ void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIn
 	Swerve_resetEncoders(swerve);
 }
 
+/*
+	Set motor one target speed
+	target: speed in rpms
+*/
 void Swerve_setMotOneTarget(SwerveModule *swerve, float target)
 {
 	//set targets in rpms
 	swerve -> targetMotorOneSpeed = target;
 }
 
+/*
+	Set motor two target speed
+	target: speed in rpms
+*/
 void Swerve_setMotTwoTarget(SwerveModule *swerve, float target)
 {
 	swerve -> targetMotorTwoSpeed = target;
