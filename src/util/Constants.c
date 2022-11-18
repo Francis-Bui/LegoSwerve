@@ -16,27 +16,27 @@ const float MAX_SPEED = 0.0;
 // AUTO CONSTANTS
 
 const int PATH_LEN = 13;
-const int PATH_HEIGHT = 2;
+const int PATH_HEIGHT = 3;
 
 //PID arrays formatted as
 // arr = {p, i ,d ,integral limit, max, min}
 const float L_CTRL_ONE[6]=
 {
+    0.9,
+    0.2,
     0,
     0,
-    0,
-    0,
-    1,
-    -1,
+    100,
+    -100,
 };
 const float L_CTRL_TWO[6]=
 {
+    0.9,
+    0.2,
     0,
     0,
-    0,
-    0,
-    1,
-    -1,
+    100,
+    -100,
 };
 const float R_CTRL_ONE[6]=
 {
@@ -62,7 +62,7 @@ const float R_CTRL_TWO[6]=
 // These motors are declared here to stop vscode from glowing with errors -- remove before deployment.
 
 /*
-int motor[1] = {2}; 
+int motor[1] = {2};
 int motorA = 1;
 int motorB = 2;
 int motorC = 3;

@@ -101,13 +101,13 @@ float Swerve_getSpeed(SwerveModule *swerve) // Returns current swerve module spe
 
 float Swerve_getDistOne(SwerveModule *swerve)
 {
-	return getMotorEncoder(swerve -> motorOneIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS / 10.0;
+	return getMotorEncoder(swerve -> motorOneIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS;
 }
 
 float Swerve_getDistTwo(SwerveModule *swerve)
 {
 	//multiply by negative one to account for negative encoder counts
-	return getMotorEncoder(swerve -> motorTwoIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS / 10.0 *-1;
+	return getMotorEncoder(swerve -> motorTwoIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS;
 }
 
 float Swerve_getDist(SwerveModule *swerve)

@@ -1,4 +1,5 @@
 #include "../util/SwerveModule.c"
+#include "../auto/PathFollower.c"
 
 
 SwerveModule leftModule;
@@ -21,6 +22,46 @@ typedef enum DriveStates
 	AUTO,
 	IDLE,
 } DriveStates;
+
+task t_RPID_ControllerOne()
+{
+	while(true)
+	{
+		float err = rightModule.targetMotorOneSpeed - Swerve_getMotorOneSpeed(&rightModule);
+		float drive = PID_calculateDrive(&(rightModule.ctrlOne), err);
+		setMotorSpeed(rightModule.motorOneIndex, drive);
+	}
+}
+
+task t_RPID_ControllerTwo()
+{
+	while(true)
+	{
+		float err = rightModule.targetMotorTwoSpeed - Swerve_getMotorTwoSpeed(&rightModule);
+		float drive = PID_calculateDrive(&(rightModule.ctrlTwo), err);
+		setMotorSpeed(rightModule.motorTwoIndex, drive);
+	}
+}
+
+task t_LPID_ControllerOne()
+{
+	while(true)
+	{
+		float err = leftModule.targetMotorOneSpeed - Swerve_getMotorOneSpeed(&leftModule);
+		float drive = PID_calculateDrive(&(leftModule.ctrlOne), err);
+		setMotorSpeed(leftModule.motorOneIndex, drive);
+	}
+}
+
+task t_LPID_ControllerTwo()
+{
+	while(true)
+	{
+		float err = leftModule.targetMotorTwoSpeed - Swerve_getMotorTwoSpeed(&leftModule);
+		float drive = PID_calculateDrive(&(leftModule.ctrlTwo), err);
+		setMotorSpeed(leftModule.motorTwoIndex, drive);
+	}
+}
 
 task main()
 {
@@ -63,10 +104,11 @@ task main()
 	bool runDrive = true;
 
 	//Swerve_setAngleRelative(&leftModule, 360.0);
-	Swerve_setMotOneTarget(&rightModule, 50);
+	//followPath(PATH_ONE);
+	Swerve_setMotOneTarget(&leftModule, 50);
 	Swerve_setMotTwoTarget(&leftModule, 50);
-	startTask(t_RPID_ControllerOne);
-	startTask(t_RPID_ControllerTwo);
+	startTask(t_LPID_ControllerOne);
+	startTask(t_LPID_ControllerTwo);
 
 	clearDebugStream();
 	while(runDrive)
@@ -75,18 +117,23 @@ task main()
 		{
 			clearDebugStream();
 		}
-		writeDebugStreamLine("Motor one %f, Motor Two %f", Swerve_getMotorOneSpeed(&rightModule), Swerve_getMotorTwoSpeed(&rightModule));
+		datalogAddValueWithTimeStamp(0, Swerve_getMotorOneSpeed(&leftModule));
+		datalogAddValueWithTimeStamp(1, Swerve_getMotorTwoSpeed(&leftModule));
+		datalogAddValueWithTimeStamp(2, 50);
+		//writeDebugStreamLine("Motor one %f, Motor Two %f", Swerve_getMotorOneSpeed(&leftModule), Swerve_getMotorTwoSpeed(&leftModule));
 	}
 }
 
 void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, float speed)
 {
 	int direction = (distance >= 0) ? 1 : -1;
+	/*
 	Swerve_resetEncoders(left);
 	Swerve_resetEncoders(right);
 	//Swerve_setDriveSpeed(swerve, 0.5*direction);
 	Swerve_setDriveSpeed(left, speed);
 	Swerve_setDriveSpeed(right, speed);
+	*/
 	time1[T2] = 0;
 	//while(fabs(Swerve_getDist(left)) < fabs(distance))
 	while(time1[T2] < 10000)
@@ -97,25 +144,4 @@ void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, fl
 	}
 	Swerve_setDriveSpeed(left, 0);
 	Swerve_setDriveSpeed(right, 0);
-}
-
-
-task t_RPID_ControllerOne()
-{
-	while(true)
-	{
-		float err = rightModule.targetMotorOneSpeed - Swerve_getMotorOneSpeed(&rightModule);
-		float drive = PID_calculateDrive(&(rightModule.ctrlOne), err);
-		setMotorSpeed(rightModule.motorOneIndex, drive);
-	}
-}
-
-task t_RPID_ControllerTwo()
-{
-	while(true)
-	{
-		float err = rightModule.targetMotorTwoSpeed - Swerve_getMotorTwoSpeed(&rightModule);
-		float drive = PID_calculateDrive(&(rightModule.ctrlTwo), err);
-		setMotorSpeed(rightModule.motorTwoIndex, drive);
-	}
 }

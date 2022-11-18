@@ -1,6 +1,4 @@
-#include "../subsystems/Drive.c"
-
-const float PATH_ONE[13][3] = 
+/*const float PATH_ONE[13][3] = 
 {
     // drive distance in mm
     [0][0] = 150,
@@ -48,3 +46,4 @@ const float PATH_ONE[13][3] =
     [12][2] = 40,
 
 };
+*/
