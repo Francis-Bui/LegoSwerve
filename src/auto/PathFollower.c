@@ -12,8 +12,10 @@ void followPath(float pathArray[PATH_LEN][PATH_HEIGHT])
 
         while (Swerve_getDist(&rightModule) != pathArray[i][0])
         {
-            Swerve_driveDist(&leftModule, pathArray[i][0], 1);
-            Swerve_driveDist(&rightModule, pathArray[i][0], 1);
+            Swerve_setMotOneTarget(&rightModule, pathArray[i][2]);
+            Swerve_setMotTwoTarget(&rightModule, pathArray[i][2]);
+            Swerve_setMotOneTarget(&leftModule, pathArray[i][2]);
+            Swerve_setMotTwoTarget(&leftModule, pathArray[i][2]);
         }
     }
 }
