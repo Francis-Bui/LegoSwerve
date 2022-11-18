@@ -13,9 +13,20 @@ void Robot_initRobot(Robot *robot, int gyroIndexIn, int accelIndexIn)
     Robot_resetAccel(robot);
 }
 
+/**
+ * Returns robot rotation in degrees
+ * based on last setpoint
+ * @param Robot pointer to robot struct
+*/
+void Robot_getRotation(Robot *robot)
+{
+    return getGyroDegrees(robot -> gyroIndex);
+}
+
 void Robot_resetGyro(Robot *robot)
 {
     resetGyro(robot -> gyroIndex);
+    Robot_getHeading(robot);
 }
 
 void Robot_resetAccel(Robot *robot)
