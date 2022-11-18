@@ -43,7 +43,7 @@ void Swerve_setAngleRelative(SwerveModule *swerve, float angle)
 {
 	swerve -> targetAngle = angle * 2.0; // multiply by 2 to account for 1:2 gear ratio
 
-	setMotorSyncEncoder(swerve -> motorOneIndex, swerve -> motorTwoIndex, -ANGULAR_SPEED, swerve -> targetAngle, ANGULAR_SPEED);	
+	setMotorSyncEncoder(swerve -> motorOneIndex, swerve -> motorTwoIndex, -ANGULAR_SPEED, swerve -> targetAngle, ANGULAR_SPEED);
 }
 
 void Swerve_setAngleAbsolute(SwerveModule *swerve, float angle)
@@ -54,10 +54,11 @@ void Swerve_setAngleAbsolute(SwerveModule *swerve, float angle)
 	setMotorTarget(swerve -> motorTwoIndex, swerve -> targetAngle, -ANGULAR_SPEED);
 }
 
-void Swerve_setDriveSpeed(SwerveModule *swerve, float speed) // set drive speed in meters per second.
+void Swerve_setDriveSpeed(SwerveModule *swerve, float speed) // set drive speed in rpm
 {
 	swerve -> targetDriveSpeed = POWER_RATE * speed; // convert m/s to power value
-	setMotorSync(swerve -> motorOneIndex, swerve -> motorTwoIndex, ANGULAR_SPEED, swerve -> targetDriveSpeed);
+	setMotorSpeed(swerve -> motorOneIndex, speed);
+	setMotorSpeed(swerve -> motorTwoIndex, speed);
 }
 
 float Swerve_getAngle(SwerveModule *swerve)
@@ -74,10 +75,6 @@ float Swerve_getSpeed(SwerveModule *swerve) // Returns current swerve module spe
 }
 
 //distance in cms
-float Swerve_getDist(SwerveModule *swerve)
-{
-	return Swerve_getDistOne(swerve) + Swerve_getDistTwo(swerve);
-}
 
 float Swerve_getDistOne(SwerveModule *swerve)
 {
@@ -90,16 +87,11 @@ float Swerve_getDistTwo(SwerveModule *swerve)
 	return getMotorEncoder(swerve -> motorTwoIndex) * NET_GEAR_RATIO * 2 * PI * WHEEL_RADIUS / 10.0 *-1;
 }
 
-//Takes in a distance in cm, speed in m/s
-void Swerve_driveDist(SwerveModule *swerve, float distance, float speed)
+float Swerve_getDist(SwerveModule *swerve)
 {
-	int direction = (distance >= 0) ? 1 : -1; 
-	Swerve_resetEncoders(swerve);
-	Swerve_setDriveSpeed(swerve, 0.5*direction);
-	while(fabs(Swerve_getDist()) < fabs(distance))
-	{}
-	Swerve_setDriveSpeed(swerve, 0);
+	return Swerve_getDistOne(swerve) + Swerve_getDistTwo(swerve);
 }
+
 
 // code for when we do full kinematics base swerve
 

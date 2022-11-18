@@ -4,6 +4,7 @@
 SwerveModule leftModule;
 SwerveModule rightModule;
 
+void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, float speed);
 
 void zeroModules()
 {
@@ -61,8 +62,9 @@ task main()
 
 	bool runDrive = true;
 
-	Swerve_setAngleRelative(&leftModule, 90.0);
-	displayCenteredBigTextLine("%f", Swerve_getAngle(&leftModule));
+	Drive_driveDist(&leftModule, &rightModule, 500, 100);
+	//Swerve_setAngleRelative(&leftModule, 360.0);
+
 
 	while(runDrive)
 	{
@@ -80,6 +82,26 @@ task main()
 		}*/
 
 	}
+}
+
+void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, float speed)
+{
+	int direction = (distance >= 0) ? 1 : -1;
+	Swerve_resetEncoders(left);
+	Swerve_resetEncoders(right);
+	//Swerve_setDriveSpeed(swerve, 0.5*direction);
+	Swerve_setDriveSpeed(left, speed);
+	Swerve_setDriveSpeed(right, speed);
+	time1[T2] = 0;
+	//while(fabs(Swerve_getDist(left)) < fabs(distance))
+	while(time1[T2] < 10000)
+	{
+		//for debugging
+		displayCenteredBigTextLine(0, "Left: %f", Swerve_getDriveSpeed(left));
+		displayCenteredBigTextLine(5, "Right: %f", Swerve_getDriveSpeed(right));
+	}
+	Swerve_setDriveSpeed(left, 0);
+	Swerve_setDriveSpeed(right, 0);
 }
 
 
