@@ -1,11 +1,12 @@
 #include "../util/SwerveModule.c"
-#include "../auto/PathFollower.c"
-
+#include "../auto/PathTransformer.c"
 
 SwerveModule leftModule;
 SwerveModule rightModule;
 
 void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, float speed);
+
+void Auto_followPath(const float* distanceArray, const float* headingArray, const float* rpmArray);
 
 void zeroModules()
 {
@@ -149,4 +150,36 @@ void Drive_driveDist(SwerveModule *left, SwerveModule *right, float distance, fl
 	}
 	Swerve_setDriveSpeed(left, 0);
 	Swerve_setDriveSpeed(right, 0);
+}
+
+void Auto_followPath(const float* distanceArray, const float* headingArray, const float* rpmArray)
+{
+    for(int i = 0; i < PATH_LEN; i++)
+    {
+        stopTask(t_LPID_ControllerOne);
+        stopTask(t_LPID_ControllerTwo);
+		stopTask(t_RPID_ControllerOne);
+        stopTask(t_RPID_ControllerTwo);
+
+	    Swerve_setDriveSpeed(&leftModule, 0);
+	    Swerve_setDriveSpeed(&rightModule, 0);
+
+		Swerve_setAngleAbsolute(&leftModule, headingArray[i]);
+		Swerve_setAngleAbsolute(&rightModule, headingArray[i]);
+
+        while (Swerve_getAngle(&rightModule) != headingArray[i] || Swerve_getAngle(&leftModule) != headingArray[i]){}
+
+        Swerve_setMotOneTarget(&leftModule, rpmArray[i]);
+        Swerve_setMotTwoTarget(&leftModule, rpmArray[i]);
+		Swerve_setMotOneTarget(&rightModule, rpmArray[i]);
+        Swerve_setMotTwoTarget(&rightModule, rpmArray[i]);
+
+		startTask(t_LPID_ControllerOne);
+	    startTask(t_LPID_ControllerTwo);
+		startTask(t_RPID_ControllerOne);
+	    startTask(t_RPID_ControllerTwo);
+
+        while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
+
+    }
 }
