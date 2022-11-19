@@ -64,6 +64,20 @@ task t_LPID_ControllerTwo()
 	}
 }
 
+task t_setLeftModuleAngle()
+{
+	Swerve_setAngleAbsolute(&leftModule, leftModule.targetAngle);
+}
+
+task t_setRightModuleAngle()
+{
+
+	Swerve_setAngleAbsolute(&rightModule, rightModule.targetAngle);
+
+}
+
+
+
 task main()
 {
 	DriveStates DriveState = IDLE;
@@ -106,8 +120,9 @@ task main()
 
 	bool runDrive = true;
 
-	//Swerve_setAngleRelative(&leftModule, 360.0);
-	//followPath(PATH_ONE);
+	Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM);
+
+	/*
 	Swerve_setMotOneTarget(&rightModule, 90);
 	Swerve_setMotTwoTarget(&rightModule, 90);
 	Swerve_setMotOneTarget(&leftModule, 90);
@@ -116,6 +131,7 @@ task main()
 	startTask(t_RPID_ControllerTwo);
 	startTask(t_LPID_ControllerOne);
 	startTask(t_LPID_ControllerTwo);
+	*/
 
 	clearDebugStream();
 	while(runDrive)
@@ -163,11 +179,28 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
 
 	    Swerve_setDriveSpeed(&leftModule, 0);
 	    Swerve_setDriveSpeed(&rightModule, 0);
+		Swerve_resetEncoders(&leftModule);
+		Swerve_resetEncoders(&rightModule);
 
-		Swerve_setAngleAbsolute(&leftModule, headingArray[i]);
-		Swerve_setAngleAbsolute(&rightModule, headingArray[i]);
+		time1[T3] = 0;
+		while(time1[T3] < 300){}
 
-        while (Swerve_getAngle(&rightModule) != headingArray[i] || Swerve_getAngle(&leftModule) != headingArray[i]){}
+		Swerve_setAngleTarget(&rightModule, headingArray[i]);
+		Swerve_setAngleTarget(&leftModule, headingArray[i]);
+		
+		startTask(t_setLeftModuleAngle);
+		startTask(t_setRightModuleAngle);
+
+		time1[T3] = 0;
+		while(time1[T3] < 1300){}
+
+		stopTask(t_setLeftModuleAngle);
+		stopTask(t_setRightModuleAngle);
+
+		Swerve_resetEncoders(&leftModule);
+		Swerve_resetEncoders(&rightModule);
+
+        //while (Swerve_getAngle(&rightModule) != headingArray[i] || Swerve_getAngle(&leftModule) != headingArray[i]){}
 
         Swerve_setMotOneTarget(&leftModule, rpmArray[i]);
         Swerve_setMotTwoTarget(&leftModule, rpmArray[i]);
@@ -179,7 +212,17 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
 		startTask(t_RPID_ControllerOne);
 	    startTask(t_RPID_ControllerTwo);
 
-        while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
+		time1[T3] = 0;
+		while(time1[T3] < 3000){}
+        //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
+	}
+	stopTask(t_LPID_ControllerOne);
+    stopTask(t_LPID_ControllerTwo);
+	stopTask(t_RPID_ControllerOne);
+    stopTask(t_RPID_ControllerTwo);
 
-    }
+	Swerve_setDriveSpeed(&leftModule, 0);
+	Swerve_setDriveSpeed(&rightModule, 0);
+	Swerve_resetEncoders(&leftModule);
+	Swerve_resetEncoders(&rightModule);
 }
