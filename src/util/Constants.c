@@ -40,8 +40,8 @@ const float L_CTRL_TWO[6]=
 };
 const float R_CTRL_ONE[6]=
 {
-    0,
-    0,
+    0.95,
+    0.5,
     0,
     0,
     100,
@@ -49,8 +49,8 @@ const float R_CTRL_ONE[6]=
 };
 const float R_CTRL_TWO[6]=
 {
-    0,
-    0,
+    0.95,
+    0.5,
     0,
     0,
     100,
