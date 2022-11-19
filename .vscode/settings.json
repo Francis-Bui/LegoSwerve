@@ -3,5 +3,14 @@
     "files.associations": {
         "cmath": "c",
         "cstdlib": "c"
-    }
+    },
+    "debug.inlineValues": "off",
+    "breadcrumbs.showTypeParameters": false,
+    "outline.showTypeParameters": false,
+    "editor.suggest.showTypeParameters": false,
+    "editor.parameterHints.enabled": false,
+    "javascript.inlayHints.parameterNames.suppressWhenArgumentMatchesName": true,
+    "java.inlayHints.parameterNames.enabled": "none",
+    "C_Cpp.vcFormat.indent.lambdaBracesWhenParameter": true,
+    "editor.inlayHints.enabled": "off"
 }

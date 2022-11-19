@@ -43,6 +43,7 @@ void PID_initPIDConstants(PIDController *controller, float p, float i, float d, 
 	controller -> kP = p;
 	controller -> kI = i;
 	controller -> kD = d;
+	controller -> integralLimit = integralLimit;
 }
 
 void PID_initOutputRange(PIDController *controller, float max, float min)

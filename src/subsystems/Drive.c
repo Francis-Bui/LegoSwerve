@@ -107,14 +107,14 @@ task main()
 
 	//Swerve_setAngleRelative(&leftModule, 360.0);
 	//followPath(PATH_ONE);
-	//Swerve_setMotOneTarget(&rightModule, 90);
-	//Swerve_setMotTwoTarget(&rightModule, 90);
-	//startTask(t_RPID_ControllerOne);
-	//startTask(t_RPID_ControllerTwo);
-	motor[motorA] = 100;
-	motor[motorB] = 100;
-	motor[motorC] = 100;
-	motor[motorD] = 100;
+	Swerve_setMotOneTarget(&rightModule, 90);
+	Swerve_setMotTwoTarget(&rightModule, 90);
+	Swerve_setMotOneTarget(&leftModule, 90);
+	Swerve_setMotTwoTarget(&leftModule, 90);
+	startTask(t_RPID_ControllerOne);
+	startTask(t_RPID_ControllerTwo);
+	startTask(t_LPID_ControllerOne);
+	startTask(t_LPID_ControllerTwo);
 
 	clearDebugStream();
 	while(runDrive)
@@ -123,8 +123,8 @@ task main()
 		{
 			clearDebugStream();
 		}
-		datalogAddValueWithTimeStamp(0, (int)(Swerve_getMotorOneSpeed(&rightModule)));
-		datalogAddValueWithTimeStamp(4, (int)(Swerve_getMotorTwoSpeed(&rightModule)));
+		datalogAddValueWithTimeStamp(0, (int)(Swerve_getMotorOneSpeed(&leftModule)));
+		datalogAddValueWithTimeStamp(4, (int)(Swerve_getMotorTwoSpeed(&leftModule)));
 		//writeDebugStreamLine("Motor one %f, Motor Two %f", Swerve_getMotorOneSpeed(&leftModule), Swerve_getMotorTwoSpeed(&leftModule));
 	}
 }

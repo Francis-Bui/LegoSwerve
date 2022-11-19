@@ -50,7 +50,7 @@ void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIn
 void Swerve_setMotOneTarget(SwerveModule *swerve, float target)
 {
 	//set targets in rpms
-	swerve -> targetMotorOneSpeed = target;
+	swerve -> targetMotorOneSpeed = target * 2;
 }
 
 /*
@@ -59,7 +59,7 @@ void Swerve_setMotOneTarget(SwerveModule *swerve, float target)
 */
 void Swerve_setMotTwoTarget(SwerveModule *swerve, float target)
 {
-	swerve -> targetMotorTwoSpeed = target;
+	swerve -> targetMotorTwoSpeed = target * 2;
 }
 
 void Swerve_setAngleRelative(SwerveModule *swerve, float angle)
