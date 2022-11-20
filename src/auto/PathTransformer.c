@@ -3,7 +3,6 @@
 
 const float PATH_ONE_DISTANCE[13] = {
 
-
     150,
     150,
     250,
@@ -22,7 +21,6 @@ const float PATH_ONE_DISTANCE[13] = {
 
 const float PATH_ONE_HEADING[13] = {
 
-
     0,
     30,
     40,
@@ -40,7 +38,6 @@ const float PATH_ONE_HEADING[13] = {
 };
 
 const float PATH_ONE_RPM[13] = {
-
 
     170,
     150,
@@ -77,12 +74,29 @@ const float PATH_ONE_TIME[13] = {
 
 };
 
-const float PATH_TWO_RPM_ALPHA[13] =
-{
+const float PATH_TWO_RPM_ALPHA[4] = {
+
+    170,
+    -85,
+    -170,
+    -85,
 
 };
 
-const float PATH_TWO_RPM_BETA[13] = 
-{
+const float PATH_TWO_RPM_BETA[4] = {
 
+    85,
+    170,
+    -85,
+    -170,
+
+};
+
+const float PATH_TWO_TIME[4] = {
+
+    2500,
+    2500,
+    2500,
+    2500,
+    
 };
