@@ -6,23 +6,16 @@ SwerveModule rightModule;
 
 void initializePIDSpeed();
 void initializePIDAngle();
+void resetPIDSpeedControllers();
+void resetPIDAngleControllers();
 
 void startSpeedPIDTasks();
 void stopSpeedPIDTasks();
 void startAnglePIDTasks();
 void stopAnglePIDTasks();
 
+
 void Auto_followPath(const float* distanceArray, const float* headingArray, const float* rpmArray);
-
-void zeroModules()
-{
-	Swerve_setAngleAbsolute(&leftModule, 0.0);
-	Swerve_setAngleAbsolute(&rightModule, 0.0);
-}
-
-void fullDrive()
-{
-}
 
 typedef enum DriveStates
 {
@@ -72,6 +65,7 @@ task t_LPID_SpeedTwo()
 
 task t_LPID_AngleOne()
 {
+	resetMotorEncoder(leftModule.motorPorts[0]);
 	while(true)
 	{
 		float err = leftModule.targetMotorAngles[0] - Swerve_getMotorAngle(&leftModule, 0);
@@ -81,16 +75,18 @@ task t_LPID_AngleOne()
 }
 task t_LPID_AngleTwo()
 {
+	resetMotorEncoder(leftModule.motorPorts[1]);
 	while(true)
 	{
-		float err = -leftModule.targetMotorAngles[1] - Swerve_getMotorAngle(&leftModule, 1);
+		float err = leftModule.targetMotorAngles[1] - Swerve_getMotorAngle(&leftModule, 1);
 		float drive = PID_calculateDrive(&(leftModule.ctrlAngleTwo),err);
-		setMotorSpeed(leftModule.motorPorts[1], -drive);
+		setMotorSpeed(leftModule.motorPorts[1], drive);
 	}
 }
 
 task t_RPID_AngleOne()
 {
+	resetMotorEncoder(rightModule.motorPorts[0]);
 	while(true)
 	{
 		float err = rightModule.targetMotorAngles[0] - Swerve_getMotorAngle(&rightModule, 0);
@@ -100,24 +96,13 @@ task t_RPID_AngleOne()
 }
 task t_RPID_AngleTwo()
 {
+	resetMotorEncoder(rightModule.motorPorts[1]);
 	while(true)
 	{
 		float err = rightModule.targetMotorAngles[1] - Swerve_getMotorAngle(&rightModule, 1);
 		float drive = PID_calculateDrive(&(rightModule.ctrlAngleTwo),err);
-		setMotorSpeed(rightModule.motorPorts[1], -drive);
+		setMotorSpeed(rightModule.motorPorts[1], drive);
 	}
-}
-
-task t_setLeftModuleAngle()
-{
-	Swerve_setAngleAbsolute(&leftModule, leftModule.targetAngle);
-}
-
-task t_setRightModuleAngle()
-{
-
-	Swerve_setAngleAbsolute(&rightModule, rightModule.targetAngle);
-
 }
 
 task main()
@@ -149,33 +134,11 @@ task main()
 
 	bool runDrive = true;
 
-	//Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM);
-
-	/*
-	Swerve_setMotOneTarget(&rightModule, 90);
-	Swerve_setMotTwoTarget(&rightModule, 90);
-	Swerve_setMotOneTarget(&leftModule, 90);
-	Swerve_setMotTwoTarget(&leftModule, 90);
-	startTask(t_RPID_ControllerOne);
-	startTask(t_RPID_ControllerTwo);
-	startTask(t_LPID_ControllerOne);
-	startTask(t_LPID_ControllerTwo);
-	*/
-
-	Swerve_setMotorTargetAngle(&leftModule, 0, 90);
-	Swerve_setMotorTargetAngle(&leftModule, 1, 90);
-	startAnglePIDTasks();
+	Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM);
 
 	clearDebugStream();
 	while(runDrive)
 	{
-		// if(getAvailSpaceInDebugStream() <= 100)
-		// {
-		// 	clearDebugStream();
-		// }
-		datalogAddValueWithTimeStamp(0, (int) Swerve_getMotorAngle(&leftModule, 0));
-		datalogAddValueWithTimeStamp(4, (int) Swerve_getMotorAngle(&leftModule, 1));
-		//writeDebugStreamLine("Motor one %f, Motor Two %f", Swerve_getMotorOneSpeed(&leftModule), Swerve_getMotorTwoSpeed(&leftModule));
 	}
 }
 
@@ -184,6 +147,9 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
     for(int i = 0; i < PATH_LEN; i++)
     {
         stopSpeedPIDTasks();
+		stopAnglePIDTasks();
+		resetPIDAngleControllers();
+		resetPIDSpeedControllers();
 	    Swerve_setDriveSpeed(&leftModule, 0);
 	    Swerve_setDriveSpeed(&rightModule, 0);
 		Swerve_resetEncoders(&leftModule);
@@ -192,22 +158,23 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
 		time1[T3] = 0;
 		while(time1[T3] < 300){}
 
-		Swerve_setAngleTarget(&rightModule, headingArray[i]);
-		Swerve_setAngleTarget(&leftModule, headingArray[i]);
+		Swerve_setMotorTargetAngle(&leftModule, 0, headingArray[i]);
+		Swerve_setMotorTargetAngle(&leftModule, 1, -headingArray[i]);
+		Swerve_setMotorTargetAngle(&rightModule, 0, headingArray[i]);
+		Swerve_setMotorTargetAngle(&rightModule, 1, -headingArray[i]);
 
-		startTask(t_setLeftModuleAngle);
-		startTask(t_setRightModuleAngle);
+		startAnglePIDTasks();
 
-		time1[T3] = 0;
-		while(time1[T3] < 1300){}
+		while ((int) Swerve_getMotorAngle(&rightModule,0) != headingArray[i] ||
+				(int) Swerve_getMotorAngle(&leftModule,0) != headingArray[i] ||
+				(int) Swerve_getMotorAngle(&rightModule,1) != -headingArray[i] ||
+				(int) Swerve_getMotorAngle(&leftModule,1) != -headingArray[i]){}
 
-		stopTask(t_setLeftModuleAngle);
-		stopTask(t_setRightModuleAngle);
+		stopAnglePIDTasks();
+		resetPIDAngleControllers();
 
 		Swerve_resetEncoders(&leftModule);
 		Swerve_resetEncoders(&rightModule);
-
-        //while (Swerve_getAngle(&rightModule) != headingArray[i] || Swerve_getAngle(&leftModule) != headingArray[i]){}
 
 		Swerve_setMotorTargetSpeed(&leftModule, 0, rpmArray[i]);
 		Swerve_setMotorTargetSpeed(&leftModule, 1, rpmArray[i]);
@@ -221,6 +188,7 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
 	stopSpeedPIDTasks();
+	resetPIDSpeedControllers();
 
 	Swerve_setDriveSpeed(&leftModule, 0);
 	Swerve_setDriveSpeed(&rightModule, 0);
@@ -248,12 +216,32 @@ void startAnglePIDTasks()
 {
 	startTask(t_LPID_AngleOne);
 	startTask(t_LPID_AngleTwo);
+	startTask(t_RPID_AngleOne);
+	startTask(t_RPID_AngleTwo);
 }
 
 void stopAnglePIDTasks()
 {
 	stopTask(t_LPID_AngleOne);
 	stopTask(t_LPID_AngleTwo);
+	stopTask(t_RPID_AngleOne);
+	stopTask(t_RPID_AngleTwo);
+}
+
+void resetPIDSpeedControllers()
+{
+	PID_reset(&(leftModule.ctrlSpeedOne));
+	PID_reset(&(leftModule.ctrlSpeedTwo));
+	PID_reset(&(rightModule.ctrlSpeedOne));
+	PID_reset(&(rightModule.ctrlSpeedTwo));
+}
+
+void resetPIDAngleControllers()
+{
+	PID_reset(&(leftModule.ctrlAngleOne));
+	PID_reset(&(leftModule.ctrlAngleTwo));
+	PID_reset(&(rightModule.ctrlAngleOne));
+	PID_reset(&(rightModule.ctrlAngleTwo));
 }
 
 void initializePIDSpeed()

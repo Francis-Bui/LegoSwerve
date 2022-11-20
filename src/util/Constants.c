@@ -4,7 +4,7 @@ const float DIFF_TO_WHEEL = 3.50;
 const float NET_GEAR_RATIO = 1.75;
 const float TRACK_WIDTH = 10.0; //radius * cos(pi/4);
 const float WHEEL_BASE = 10.0; //radius * sin(pi/4)
-const float ENCODER_TO_ANGLE = 2;
+const float ENCODER_TO_ANGLE = 0.5;
 const float ANGULAR_SPEED = 100.0;
 
 const float POWER_RATE = 96.49; // rate of motor power to top speed.
@@ -59,7 +59,7 @@ const float R_SPEED_TWO[6]=
 
 const float L_ANGLE_ONE[6]=
 {
-    .585,
+    2.23,
     0.0375,
     0.0035,
     0.00025,
@@ -68,7 +68,7 @@ const float L_ANGLE_ONE[6]=
 };
 const float L_ANGLE_TWO[6]=
 {
-    .585,
+    2.23,
     0.0375,
     0.0035,
     0.00025,
@@ -77,8 +77,8 @@ const float L_ANGLE_TWO[6]=
 };
 const float R_ANGLE_ONE[6]=
 {
-    0.5,
-    0,
+    4,
+    0.020,
     0,
     0.00025,
     100,
@@ -86,8 +86,8 @@ const float R_ANGLE_ONE[6]=
 };
 const float R_ANGLE_TWO[6]=
 {
-    0.,
-    0,
+    4,
+    0.025,
     0,
     0.00025,
     100,
