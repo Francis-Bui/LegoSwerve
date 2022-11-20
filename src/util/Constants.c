@@ -15,8 +15,18 @@ const float MAX_SPEED = 0.0;
 
 // AUTO CONSTANTS
 
-const int PATH_LEN = 13;
-const int PATH_HEIGHT = 3;
+const int PATH_ONE_LEN = 13;
+const int PATH_TWO_LEN = 4;
+
+const int MAX_RUNTIME = 35000;
+const int LOCK_ANGLE = 45;
+
+// SENSOR INDEX
+
+const tSensors GYRO_PORT = S1;
+const tSensors ACCEL_PORT = S2;
+const tSensors F_ULTRASONIC_PORT = S3;
+const tSensors B_ULTRASONIC_PORT = S4;
 
 //PID arrays formatted as
 // arr = {p, i ,d ,integral limit, max, min}

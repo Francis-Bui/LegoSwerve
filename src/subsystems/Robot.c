@@ -1,14 +1,21 @@
 typedef struct Robot
 {
-    int gyroIndex;
-    int accelIndex;
+    tSensors gyroIndex;
+    tSensors accelIndex;
+    tSensors frontUltrasonicIndex;
+    tSensors backUltrasonicIndex;
 
 } Robot;
 
-void Robot_initRobot(Robot *robot, int gyroIndexIn, int accelIndexIn)
+void Robot_resetGyro(Robot *robot);
+void Robot_resetAccel(Robot *robot);
+
+void Robot_initRobot(Robot *robot, tSensors gyroIndexIn, tSensors accelIndexIn, tSensors frontUltrasonicIndexIn, tSensors backUltrasonicIndexIn)
 {
     robot -> gyroIndex = gyroIndexIn;
     robot -> accelIndex = accelIndexIn;
+    robot -> frontUltrasonicIndex = frontUltrasonicIndexIn;
+    robot -> backUltrasonicIndex = backUltrasonicIndexIn;
     Robot_resetGyro(robot);
     Robot_resetAccel(robot);
 }
@@ -18,7 +25,7 @@ void Robot_initRobot(Robot *robot, int gyroIndexIn, int accelIndexIn)
  * based on last setpoint
  * @param Robot pointer to robot struct
 */
-void Robot_getRotation(Robot *robot)
+float Robot_getRotation(Robot *robot)
 {
     return getGyroDegrees(robot -> gyroIndex);
 }
@@ -26,10 +33,19 @@ void Robot_getRotation(Robot *robot)
 void Robot_resetGyro(Robot *robot)
 {
     resetGyro(robot -> gyroIndex);
-    Robot_getHeading(robot);
 }
 
 void Robot_resetAccel(Robot *robot)
 {
+		sensorReset(robot -> accelIndex);
+}
 
+float Robot_getFrontDistance(Robot *robot)
+{
+    return getUSDistance(robot -> frontUltrasonicIndex);
+}
+
+float Robot_getBackDistance(Robot *robot)
+{
+    return getUSDistance(robot -> backUltrasonicIndex);
 }
