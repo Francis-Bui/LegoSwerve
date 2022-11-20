@@ -20,7 +20,7 @@ const int PATH_HEIGHT = 3;
 
 //PID arrays formatted as
 // arr = {p, i ,d ,integral limit, max, min}
-const float L_CTRL_ONE[6]=
+const float L_SPEED_ONE[6]=
 {
     .585,
     0.0375,
@@ -29,7 +29,7 @@ const float L_CTRL_ONE[6]=
     100,
     -100,
 };
-const float L_CTRL_TWO[6]=
+const float L_SPEED_TWO[6]=
 {
     .585,
     0.0375,
@@ -38,7 +38,7 @@ const float L_CTRL_TWO[6]=
     100,
     -100,
 };
-const float R_CTRL_ONE[6]=
+const float R_SPEED_ONE[6]=
 {
     .585,
     0.0375,
@@ -47,11 +47,48 @@ const float R_CTRL_ONE[6]=
     100,
     -100,
 };
-const float R_CTRL_TWO[6]=
+const float R_SPEED_TWO[6]=
 {
     .585,
     0.0375,
     0.0035,
+    0.00025,
+    100,
+    -100,
+};
+
+const float L_ANGLE_ONE[6]=
+{
+    0,
+    0,
+    0,
+    0.00025,
+    100,
+    -100,
+};
+const float L_ANGLE_TWO[6]=
+{
+    0,
+    0,
+    0,
+    0.00025,
+    100,
+    -100,
+};
+const float R_ANGLE_ONE[6]=
+{
+    0,
+    0,
+    0,
+    0.00025,
+    100,
+    -100,
+};
+const float R_ANGLE_TWO[6]=
+{
+    0,
+    0,
+    0,
     0.00025,
     100,
     -100,
