@@ -1,5 +1,5 @@
 // Paths are stored:
-//{distance, absolute heading, rpm}
+//{distance, absolute heading, rpm, time}
 
 const float PATH_ONE_DISTANCE[13] = {
 
@@ -24,9 +24,9 @@ const float PATH_ONE_HEADING[13] = {
 
 
     0,
-    20,
-    0,
-    -20,
+    30,
+    40,
+    30,
     -10,
     -50,
     120,
@@ -55,5 +55,24 @@ const float PATH_ONE_RPM[13] = {
     20,
     30,
     40,
+
+};
+
+const float PATH_ONE_TIME[13] = {
+
+
+    2000,
+    3000,
+    4000,
+    1000,
+    500,
+    750,
+    400,
+    250,
+    1750,
+    3000,
+    2100,
+    2200,
+    400,
 
 };

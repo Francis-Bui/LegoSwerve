@@ -134,7 +134,7 @@ task main()
 
 	bool runDrive = true;
 
-	Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM);
+	Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME);
 
 	clearDebugStream();
 	while(runDrive)
@@ -142,7 +142,7 @@ task main()
 	}
 }
 
-void Auto_followPath(const float* distanceArray, const float* headingArray, const float* rpmArray)
+void Auto_followPath(const float* distanceArray, const float* headingArray, const float* rpmArray, const float* timeArray)
 {
     for(int i = 0; i < PATH_LEN; i++)
     {
@@ -184,7 +184,7 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
 		startSpeedPIDTasks();
 
 		time1[T3] = 0;
-		while(time1[T3] < 3000){}
+		while(time1[T3] < timeArray[i]){}
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
 	stopSpeedPIDTasks();
