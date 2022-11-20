@@ -196,6 +196,44 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
 	Swerve_resetEncoders(&rightModule);
 }
 
+void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const float* timeArray)
+{
+    for(int i = 0; i < PATH_LEN; i++)
+    {
+        stopSpeedPIDTasks();
+		resetPIDSpeedControllers();
+	    Swerve_setDriveSpeed(&leftModule, 0);
+	    Swerve_setDriveSpeed(&rightModule, 0);
+		Swerve_resetEncoders(&leftModule);
+		Swerve_resetEncoders(&rightModule);
+
+		time1[T3] = 0;
+		while(time1[T3] < 300){}
+
+
+		Swerve_resetEncoders(&leftModule);
+		Swerve_resetEncoders(&rightModule);
+
+		Swerve_setMotorTargetSpeed(&leftModule, 0, rpmAlpha[i]);
+		Swerve_setMotorTargetSpeed(&leftModule, 1, rpmBeta[i]);
+		Swerve_setMotorTargetSpeed(&rightModule, 0, rpmAlpha[i]);
+		Swerve_setMotorTargetSpeed(&rightModule, 1, rpmBeta[i]);
+
+		startSpeedPIDTasks();
+
+		time1[T3] = 0;
+		while(time1[T3] < timeArray[i]){}
+        //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
+	}
+	stopSpeedPIDTasks();
+	resetPIDSpeedControllers();
+
+	Swerve_setDriveSpeed(&leftModule, 0);
+	Swerve_setDriveSpeed(&rightModule, 0);
+	Swerve_resetEncoders(&leftModule);
+	Swerve_resetEncoders(&rightModule);
+}
+
 void startSpeedPIDTasks()
 {
 	startTask(t_LPID_SpeedOne);

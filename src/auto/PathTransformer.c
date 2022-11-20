@@ -76,3 +76,13 @@ const float PATH_ONE_TIME[13] = {
     400,
 
 };
+
+const float PATH_TWO_RPM_ALPHA[13] =
+{
+
+};
+
+const float PATH_TWO_RPM_BETA[13] = 
+{
+
+};
