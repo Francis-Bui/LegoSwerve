@@ -21,6 +21,12 @@ const int PATH_TWO_LEN = 4;
 const int MAX_RUNTIME = 35000;
 const int LOCK_ANGLE = 45;
 
+// MOTOR INDEX
+
+const tMotor TOP_LEFT_MOTOR = motorA;
+const tMotor BOT_LEFT_MOTOR = motorB;
+const tMotor TOP_RIGHT_MOTOR = motorC;
+const tMotor BOT_RIGHT_MOTOR = motorD;
 // SENSOR INDEX
 
 const tSensors GYRO_PORT = S1;

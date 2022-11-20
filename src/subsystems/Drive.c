@@ -115,8 +115,8 @@ task main()
 	datalogClear();
 
 	Robot_initRobot(&Magnemite, GYRO_PORT, ACCEL_PORT, F_ULTRASONIC_PORT, B_ULTRASONIC_PORT);
-	Swerve_initModule(&leftModule, motorA, motorB);
-	Swerve_initModule(&rightModule, motorC, motorD);
+	Swerve_initModule(&leftModule, TOP_LEFT_MOTOR, BOT_LEFT_MOTOR);
+	Swerve_initModule(&rightModule, TOP_RIGHT_MOTOR, BOT_RIGHT_MOTOR);
 	initializePIDSpeed();
 	initializePIDAngle();
 
