@@ -83,9 +83,9 @@ task t_LPID_AngleTwo()
 {
 	while(true)
 	{
-		float err = leftModule.targetMotorAngles[1] - Swerve_getMotorAngle(&leftModule, 1);
+		float err = -leftModule.targetMotorAngles[1] - Swerve_getMotorAngle(&leftModule, 1);
 		float drive = PID_calculateDrive(&(leftModule.ctrlAngleTwo),err);
-		setMotorSpeed(leftModule.motorPorts[1], drive);
+		setMotorSpeed(leftModule.motorPorts[1], -drive);
 	}
 }
 
@@ -104,7 +104,7 @@ task t_RPID_AngleTwo()
 	{
 		float err = rightModule.targetMotorAngles[1] - Swerve_getMotorAngle(&rightModule, 1);
 		float drive = PID_calculateDrive(&(rightModule.ctrlAngleTwo),err);
-		setMotorSpeed(rightModule.motorPorts[1], drive);
+		setMotorSpeed(rightModule.motorPorts[1], -drive);
 	}
 }
 
@@ -149,7 +149,7 @@ task main()
 
 	bool runDrive = true;
 
-	Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM);
+	//Auto_followPath(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM);
 
 	/*
 	Swerve_setMotOneTarget(&rightModule, 90);
@@ -162,15 +162,19 @@ task main()
 	startTask(t_LPID_ControllerTwo);
 	*/
 
+	Swerve_setMotorTargetAngle(&leftModule, 0, 90);
+	Swerve_setMotorTargetAngle(&leftModule, 1, 90);
+	startAnglePIDTasks();
+
 	clearDebugStream();
 	while(runDrive)
 	{
-		if(getAvailSpaceInDebugStream() <= 100)
-		{
-			clearDebugStream();
-		}
-		datalogAddValueWithTimeStamp(0, (int)(Swerve_getMotorSpeed(&leftModule,0)));
-		datalogAddValueWithTimeStamp(4, (int)(Swerve_getMotorSpeed(&leftModule,1)));
+		// if(getAvailSpaceInDebugStream() <= 100)
+		// {
+		// 	clearDebugStream();
+		// }
+		datalogAddValueWithTimeStamp(0, (int) Swerve_getMotorAngle(&leftModule, 0));
+		datalogAddValueWithTimeStamp(4, (int) Swerve_getMotorAngle(&leftModule, 1));
 		//writeDebugStreamLine("Motor one %f, Motor Two %f", Swerve_getMotorOneSpeed(&leftModule), Swerve_getMotorTwoSpeed(&leftModule));
 	}
 }
@@ -190,7 +194,7 @@ void Auto_followPath(const float* distanceArray, const float* headingArray, cons
 
 		Swerve_setAngleTarget(&rightModule, headingArray[i]);
 		Swerve_setAngleTarget(&leftModule, headingArray[i]);
-		
+
 		startTask(t_setLeftModuleAngle);
 		startTask(t_setRightModuleAngle);
 
@@ -238,6 +242,18 @@ void stopSpeedPIDTasks()
     stopTask(t_LPID_SpeedTwo);
 	stopTask(t_RPID_SpeedOne);
     stopTask(t_RPID_SpeedTwo);
+}
+
+void startAnglePIDTasks()
+{
+	startTask(t_LPID_AngleOne);
+	startTask(t_LPID_AngleTwo);
+}
+
+void stopAnglePIDTasks()
+{
+	stopTask(t_LPID_AngleOne);
+	stopTask(t_LPID_AngleTwo);
 }
 
 void initializePIDSpeed()
