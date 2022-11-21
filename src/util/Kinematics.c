@@ -1,4 +1,6 @@
 #include "Constants.c"
+#include "Vec2.c"
+
 
 float hypot(float x, float y);
 
@@ -22,6 +24,15 @@ float* getWheelVelocities()
     return &wheelVelocities;
 }
 
+float* getMotorPowers(float clockwiseP, float forwardP)
+{
+    Vec2 powerVec = Vec2_createVector(clockwiseP, forwardP);
+    
+    Vec2 mOneUVec = Vec2_createVector(1/sqrt(2), 1/sqrt(2));
+    Vec2 mTwoUVec = Vec2_createVector(-1/sqrt(2), 1/sqrt(2));
+
+
+}
 
 float hypot(float x, float y)
 {
