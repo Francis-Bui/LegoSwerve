@@ -75,25 +75,25 @@ const float R_SPEED_TWO[6]=
 
 const float L_ANGLE_ONE[6]=
 {
-    2.23,
-    0.0375,
-    0.0035,
-    0.00025,
+    3.3,
+    0.0175,
+    0,
+    0.00015,
     100,
     -100,
 };
 const float L_ANGLE_TWO[6]=
 {
-    2.23,
-    0.0375,
-    0.0035,
-    0.00025,
+    3.3,
+    0.0175,
+    0,
+    0.00015,
     100,
     -100,
 };
 const float R_ANGLE_ONE[6]=
 {
-    4,
+    3.75,
     0.020,
     0,
     0.00025,
@@ -102,7 +102,7 @@ const float R_ANGLE_ONE[6]=
 };
 const float R_ANGLE_TWO[6]=
 {
-    4,
+    3.75,
     0.025,
     0,
     0.00025,
