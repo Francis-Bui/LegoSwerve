@@ -17,7 +17,7 @@ void Robot_initRobot(Robot *robot, tSensors gyroIndexIn, tSensors accelIndexIn, 
     robot -> frontUltrasonicIndex = frontUltrasonicIndexIn;
     robot -> backUltrasonicIndex = backUltrasonicIndexIn;
     Robot_resetGyro(robot);
-    Robot_resetAccel(robot);
+    //Robot_resetAccel(robot);
 }
 
 /**
@@ -37,7 +37,7 @@ void Robot_resetGyro(Robot *robot)
 
 void Robot_resetAccel(Robot *robot)
 {
-		sensorReset(robot -> accelIndex);
+	sensorReset(robot -> accelIndex);
 }
 
 float Robot_getFrontDistance(Robot *robot)

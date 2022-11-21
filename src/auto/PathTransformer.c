@@ -28,7 +28,7 @@ const float PATH_ONE_HEADING[13] = {
     -10,
     -50,
     120,
-    10,
+    20,
     -40,
     -15,
     -25,
@@ -77,18 +77,18 @@ const float PATH_ONE_TIME[13] = {
 const float PATH_TWO_RPM_ALPHA[4] = {
 
     170,
-    -85,
-    -170,
-    -85,
+    85,
+    170,
+    85,
 
 };
 
 const float PATH_TWO_RPM_BETA[4] = {
 
+    0,
+    170,
     85,
     170,
-    -85,
-    -170,
 
 };
 

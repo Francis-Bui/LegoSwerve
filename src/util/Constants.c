@@ -29,8 +29,8 @@ const tMotor TOP_RIGHT_MOTOR = motorC;
 const tMotor BOT_RIGHT_MOTOR = motorD;
 // SENSOR INDEX
 
-const tSensors GYRO_PORT = S1;
-const tSensors ACCEL_PORT = S2;
+const tSensors GYRO_PORT = S2;
+const tSensors ACCEL_PORT = S1;
 const tSensors F_ULTRASONIC_PORT = S3;
 const tSensors B_ULTRASONIC_PORT = S4;
 
