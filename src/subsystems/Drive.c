@@ -115,7 +115,7 @@ task t_RPID_AngleTwo()
 task main()
 {
 	time1[T4] = 0;
-	DriveStates DriveState = IDLE;
+	DriveStates DriveState = AUTO;
 
 	datalogClear();
 
@@ -126,7 +126,7 @@ task main()
 	initializePIDAngle();
 
 
-	bool buttonPressed = true;
+	bool buttonPressed = false;
 	while(buttonPressed)
 	{
 		if (getButtonPress(buttonLeft))
@@ -146,7 +146,24 @@ task main()
 		case AUTO:
 
 			bool runDrive = true;
-			Auto_followPathLinear(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_LEN);
+			resetPIDSpeedControllers();
+			Swerve_setMotorTargetSpeed(&rightModule, 0, 100);
+			Swerve_setMotorTargetSpeed(&rightModule, 1, 100);
+			Swerve_setMotorTargetSpeed(&leftModule, 0, 100);
+			Swerve_setMotorTargetSpeed(&leftModule, 1, 100);
+			startSpeedPIDTasks();
+
+			while (true)
+			{
+				datalogAddValueWithTimeStamp(0, Swerve_getMotorSpeed(&rightModule, 0));
+				datalogAddValueWithTimeStamp(1, Swerve_getMotorSpeed(&rightModule, 1));
+				datalogAddValueWithTimeStamp(2, Swerve_getMotorSpeed(&leftModule, 0));
+				datalogAddValueWithTimeStamp(3, Swerve_getMotorSpeed(&leftModule, 1));
+			}
+
+			stopSpeedPIDTasks();
+
+			//Auto_followPathLinear(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_LEN);
 			//Auto_followPathCurve(PATH_TWO_RPM_ALPHA, PATH_TWO_RPM_BETA, PATH_TWO_TIME, PATH_TWO_LEN);
 			while(runDrive)
 			{

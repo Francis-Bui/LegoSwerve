@@ -62,22 +62,19 @@ void PID_reset(PIDController *controller)
 
 float PID_calculateDrive(PIDController *controller, float error)
 {
-		float integral = controller -> pidIntegral;
-		float derivative = controller -> pidDerivative;
-		float lastError = controller -> pidLastError;
 		float drive;
 
-		if(controller -> kI != 0 && fabs(error) < controller -> integralLimit)
-			integral += error;
-		else
-			integral = 0;
+		if(controller -> kI != 0 && controller -> pidIntegral < controller -> integralLimit)
+			controller -> pidIntegral += error;
+		if(controller -> pidIntegral > controller -> integralLimit)
+			controller -> pidIntegral = controller -> integralLimit;
+		
+			
 
-		controller -> pidIntegral = integral;
-
-	  derivative = error - lastError;
+	  float derivative = error - (controller -> pidLastError);
 	  controller -> pidLastError = error;
 
-	  drive = (controller -> kP)*error + (controller -> kI)*integral + (controller -> kD)*derivative;
+	  drive = (controller -> kP)*error + (controller -> kI)*(controller -> pidLastError) + (controller -> kD)*derivative;
 	  if(drive > controller -> maxOutput)
 	  	drive = controller -> maxOutput;
 

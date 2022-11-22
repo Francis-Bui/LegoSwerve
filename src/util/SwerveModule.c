@@ -52,7 +52,7 @@ void Swerve_initModule(SwerveModule *swerve, int motorOneIndexIn, int motorTwoIn
 */
 void Swerve_setMotorTargetSpeed(SwerveModule *swerve, int motIdx, float target)
 {
-	swerve -> targetMotorSpeeds[motIdx] = target;
+	swerve -> targetMotorSpeeds[motIdx] = target * 2;
 }
 
 /**

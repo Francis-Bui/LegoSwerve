@@ -2,7 +2,14 @@
     "pros.showInstallOnStartup": false,
     "files.associations": {
         "cmath": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "istream": "c",
+        "memory": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "xlocnum": "c",
+        "xutility": "c"
     },
     "debug.inlineValues": "off",
     "breadcrumbs.showTypeParameters": false,
