@@ -20,11 +20,17 @@ Vec2 Vec2_createVector(float xIn, float yIn)
     return vec;
 }
 
+/**
+ * Calculates the dot product of two vectors. 
+*/
 float Vec2_dot(Vec2 v1, Vec2 v2)
 {
     return (v1.x)*(v2.x) + (v1.y)*(v2.y);
 }
 
+/**
+ * Scales v and its magnitude by scalar
+*/
 void Vec2_scale(Vec2 *v, float scalar)
 {
     v -> x *= scalar;
@@ -32,12 +38,15 @@ void Vec2_scale(Vec2 *v, float scalar)
     v -> magnitude *= fabs(scalar);
 }
 
+/**
+ * Returns a new vector of v1 projected onto v2
+*/
 Vec2 Vec2_projectOnto(Vec2 v1, Vec2 v2)
 {
     //projects v1 onto v2
     float scalar = Vec2_dot(v1,v2) / pow(v2.magnitude, 2);
     Vec2_scale(&v2, scalar);
-    v2.magnitude = sqrt(pow(v2.x,2) + pow(v2.y,2));
     return v2;
 }
+
 
