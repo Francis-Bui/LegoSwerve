@@ -2,11 +2,9 @@
 
 Robot Magnemite;
 
-
-
 bool getPathStatus()
 {
-    if (Robot_getFrontDistance(&Magnemite) < 5 || Robot_getBackDistance(&Magnemite) < 5 || time1[T4] > MAX_RUNTIME)
+    if (Robot_getFrontDistance(&Magnemite) < SAFETY_TOL || Robot_getBackDistance(&Magnemite) < SAFETY_TOL || time1[T4] > MAX_RUNTIME)
     {
         return false;
     }

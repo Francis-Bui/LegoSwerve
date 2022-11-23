@@ -1,6 +1,7 @@
 #include "../util/SwerveModule.c"
 #include "../auto/PathTransformer.c"
 #include "../auto/PathWatch.c"
+#include "../teleop/OI.c"
 
 #pragma config(Sensor, S2,     ,               sensorEV3_Gyro)
 #pragma config(Sensor, S3,     ,               sensorEV3_Ultrasonic)
@@ -21,11 +22,13 @@ void startAnglePIDTasks();
 void stopAnglePIDTasks();
 void eStop();
 
+void Manual_teleop();
 void Auto_followPathLinear(const float* distanceArray, const float* headingArray, const float* rpmArray, const float* timeArray, const int PATH_LEN);
 void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const float* timeArray, const int PATH_LEN);
 
 typedef enum DriveStates
 {
+	MANUAL,
 	AUTO,
 	IDLE,
 } DriveStates;
@@ -114,7 +117,6 @@ task t_RPID_AngleTwo()
 
 task main()
 {
-	time1[T4] = 0;
 	DriveStates DriveState = AUTO;
 
 	datalogClear();
@@ -136,6 +138,11 @@ task main()
 		}
 		else if (getButtonPress(buttonRight))
 		{
+			DriveState = MANUAL;
+			buttonPressed = false;
+		}
+		else if (getButtonPress(buttonTop))
+		{
 			DriveState = IDLE;
 			buttonPressed = false;
 		}
@@ -145,41 +152,36 @@ task main()
 	{
 		case AUTO:
 
-			bool runDrive = true;
 			resetPIDSpeedControllers();
 			Swerve_setMotorTargetSpeed(&rightModule, 0, 100);
 			Swerve_setMotorTargetSpeed(&rightModule, 1, 100);
 			Swerve_setMotorTargetSpeed(&leftModule, 0, 100);
 			Swerve_setMotorTargetSpeed(&leftModule, 1, 100);
+			
 			startSpeedPIDTasks();
 
-			while (true)
-			{
-				datalogAddValueWithTimeStamp(0, Swerve_getMotorSpeed(&rightModule, 0));
-				datalogAddValueWithTimeStamp(1, Swerve_getMotorSpeed(&rightModule, 1));
-				datalogAddValueWithTimeStamp(2, Swerve_getMotorSpeed(&leftModule, 0));
-				datalogAddValueWithTimeStamp(3, Swerve_getMotorSpeed(&leftModule, 1));
-			}
-
-			stopSpeedPIDTasks();
+			while (true) {logMotorData();}
 
 			//Auto_followPathLinear(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_LEN);
 			//Auto_followPathCurve(PATH_TWO_RPM_ALPHA, PATH_TWO_RPM_BETA, PATH_TWO_TIME, PATH_TWO_LEN);
-			while(runDrive)
-			{
-			}
 
 			break;
 
 		case IDLE:
 
 			break;
-	}
 
+		case MANUAL:
+			
+			Manual_teleop(true);
+
+			break;
 	}
+}
 
 void Auto_followPathLinear(const float* distanceArray, const float* headingArray, const float* rpmArray, const float* timeArray, int PATH_LEN)
 {
+	time1[T4] = 0;
 
     for(int i = 0; i < PATH_LEN; i++)
     {
@@ -187,8 +189,8 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 		stopAnglePIDTasks();
 		resetPIDAngleControllers();
 		resetPIDSpeedControllers();
-	    Swerve_setDriveSpeed(&leftModule, 0);
-	    Swerve_setDriveSpeed(&rightModule, 0);
+	    Swerve_setDriveSpeed(&leftModule, 0, 0);
+	    Swerve_setDriveSpeed(&rightModule, 0, 0);
 		Swerve_resetEncoders(&leftModule);
 		Swerve_resetEncoders(&rightModule);
 
@@ -202,10 +204,11 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 
 		startAnglePIDTasks();
 
-		while ((int) Swerve_getMotorAngle(&rightModule,0) != headingArray[i] ||
-				(int) Swerve_getMotorAngle(&leftModule,0) != headingArray[i] ||
-				(int) Swerve_getMotorAngle(&rightModule,1) != -headingArray[i] ||
-				(int) Swerve_getMotorAngle(&leftModule,1) != -headingArray[i]){}
+		while (
+				(int) Swerve_getMotorAngle(&rightModule, 0) != headingArray[i] ||
+				(int) Swerve_getMotorAngle(&rightModule, 1) != -headingArray[i] ||
+				(int) Swerve_getMotorAngle(&leftModule, 0) != headingArray[i] ||
+				(int) Swerve_getMotorAngle(&leftModule, 1) != -headingArray[i]) {}
 
 		stopAnglePIDTasks();
 		resetPIDAngleControllers();
@@ -221,6 +224,7 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 		startSpeedPIDTasks();
 
 		time1[T3] = 0;
+
 		while(time1[T3] < timeArray[i] && getPathStatus() == true){}
 
 		if (getPathStatus() == false) {break;}
@@ -231,13 +235,14 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 
 void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const float* timeArray, const int* PATH_LEN)
 {
+	time1[T4] = 0;
 
     for(int i = 0; i < PATH_LEN; i++)
     {
         stopSpeedPIDTasks();
 		resetPIDSpeedControllers();
-	    Swerve_setDriveSpeed(&leftModule, 0);
-	    Swerve_setDriveSpeed(&rightModule, 0);
+	    Swerve_setDriveSpeed(&leftModule, 0, 0);
+	    Swerve_setDriveSpeed(&rightModule, 0, 0);
 		Swerve_resetEncoders(&leftModule);
 		Swerve_resetEncoders(&rightModule);
 
@@ -256,12 +261,46 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
 		startSpeedPIDTasks();
 
 		time1[T3] = 0;
+
 		while(time1[T3] < timeArray[i] && getPathStatus() == true){}
 
 		if (getPathStatus() == false) {break;}
+
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
 	eStop();
+}
+
+void Manual_teleop(bool pidControl)
+{
+	stopSpeedPIDTasks();
+	stopAnglePIDTasks();
+	resetPIDAngleControllers();
+	resetPIDSpeedControllers();
+
+	startSpeedPIDTasks();
+
+	while (true)
+	{
+
+		short* joystickInput = getJoystickInput();
+		short* motorPowers = getMotorPowers(joystickInput[0], joystickInput[1]);
+
+		if (pidControl == true)
+		{
+			Swerve_setMotorTargetSpeed(&rightModule, 0, motorPowers[0] * POWER_SCALAR);
+			Swerve_setMotorTargetSpeed(&rightModule, 1, motorPowers[1] * POWER_SCALAR);
+			Swerve_setMotorTargetSpeed(&leftModule, 0, motorPowers[0] * POWER_SCALAR);
+			Swerve_setMotorTargetSpeed(&leftModule, 1, motorPowers[1] * POWER_SCALAR);
+		}
+		
+		else
+		{
+			Swerve_setDriveSpeed(&leftModule, motorPowers[0] * POWER_SCALAR, motorPowers[1] * POWER_SCALAR);
+			Swerve_setDriveSpeed(&rightModule, motorPowers[0] * POWER_SCALAR, motorPowers[1] * POWER_SCALAR);
+		}
+		
+	}
 }
 
 void startSpeedPIDTasks()
@@ -350,6 +389,18 @@ void initializePIDAngle()
 	PID_reset(&(rightModule.ctrlAngleTwo));
 }
 
+void logMotorData()
+{				
+	dataLogAddValueWithTimeStamp(0, Swerve_getMotorSpeed(&rightModule, 0));
+	dataLogAddValueWithTimeStamp(1, Swerve_getMotorSpeed(&rightModule, 1));
+	dataLogAddValueWithTimeStamp(2, Swerve_getMotorSpeed(&leftModule, 0));
+	dataLogAddValueWithTimeStamp(3, Swerve_getMotorSpeed(&leftModule, 1));
+	dataLogAddValueWithTimeStamp(4, Swerve_getMotorAngle(&rightModule, 0));
+	dataLogAddValueWithTimeStamp(5, Swerve_getMotorAngle(&rightModule, 1));
+	dataLogAddValueWithTimeStamp(6, Swerve_getMotorAngle(&leftModule, 0));
+	dataLogAddValueWithTimeStamp(7, Swerve_getMotorAngle(&leftModule, 1));
+}
+
 void eStop()
 {
     stopSpeedPIDTasks();
@@ -357,8 +408,8 @@ void eStop()
 	resetPIDAngleControllers();
 	resetPIDSpeedControllers();
 
-	Swerve_setDriveSpeed(&leftModule, 0);
-	Swerve_setDriveSpeed(&rightModule, 0);
+	Swerve_setDriveSpeed(&leftModule, 0, 0);
+	Swerve_setDriveSpeed(&rightModule, 0, 0);
 	Swerve_resetEncoders(&leftModule);
 	Swerve_resetEncoders(&rightModule);
 
@@ -378,8 +429,8 @@ void eStop()
 	Swerve_resetEncoders(&leftModule);
 	Swerve_resetEncoders(&rightModule);
 
-	Swerve_setDriveSpeed(&leftModule, 0);
-	Swerve_setDriveSpeed(&rightModule, 0);
+	Swerve_setDriveSpeed(&leftModule, 0, 0);
+	Swerve_setDriveSpeed(&rightModule, 0, 0);
 
 	stopAllTasks();
 

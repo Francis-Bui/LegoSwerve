@@ -13,6 +13,11 @@ const float ANGLE_TOL = 2.0;
 const float DIST_TOL = 5.0;
 const float MAX_SPEED = 0.0;
 
+// MANUAL / TELEOP CONSTANTS
+
+const float JOYSTICK_SCALAR = 1.27;
+const float POWER_SCALAR = 1.70;
+
 // AUTO CONSTANTS
 
 const int PATH_ONE_LEN = 13;
@@ -20,6 +25,7 @@ const int PATH_TWO_LEN = 4;
 
 const int MAX_RUNTIME = 35000;
 const int LOCK_ANGLE = 45;
+const int SAFETY_TOL = 5;
 
 // MOTOR INDEX
 

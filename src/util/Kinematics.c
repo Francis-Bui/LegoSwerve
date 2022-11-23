@@ -43,13 +43,14 @@ float* getMotorPowers(float clockwiseP, float forwardP)
     motorPowers[1] = mTwoResultant.magnitude;
     return motorPowers;
 }
+
 float hypot(float x, float y)
 {
 	return sqrt(pow(x,2) + pow(y,2));
 }
 
 /**
- * Takes in two motor vectors and makes sure they don't exceed. btw im akil and im awesome
+ * Takes in two motor vectors and makes sure they don't exceed.
  * the possible motor power for them individually. If they do, both vectors are scaled
  * down proportionally.  
 */

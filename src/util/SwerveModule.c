@@ -1,4 +1,5 @@
 #include "PID.c"
+#include "Kinematics.c"
 #include "Constants.c"
 
 typedef struct SwerveModule{
@@ -63,11 +64,10 @@ void Swerve_setMotorTargetAngle(SwerveModule *swerve, int motIdx, float target)
 	swerve -> targetMotorAngles[motIdx] = target;
 }
 
-void Swerve_setDriveSpeed(SwerveModule *swerve, float speed) // set drive speed in rpm
+void Swerve_setDriveSpeed(SwerveModule *swerve, float motorOneSpeed, float motorTwoSpeed) // set drive speed out of 100%
 {
-	swerve -> targetDriveSpeed = POWER_RATE * speed; // convert m/s to power value
-	setMotorSpeed(swerve -> motorPorts[0], speed);
-	setMotorSpeed(swerve -> motorPorts[1], speed);
+	setMotorSpeed(swerve -> motorPorts[0], motorOneSpeed);
+	setMotorSpeed(swerve -> motorPorts[1], motorTwoSpeed);
 }
 
 /**
