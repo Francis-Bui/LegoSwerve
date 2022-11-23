@@ -21,6 +21,7 @@ void stopSpeedPIDTasks();
 void startAnglePIDTasks();
 void stopAnglePIDTasks();
 void eStop();
+void selectPath();
 
 void Manual_teleop();
 void Auto_followPathLinear(const float* distanceArray, const float* headingArray, const float* rpmArray, const float* timeArray, const int PATH_LEN);
@@ -227,7 +228,8 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 
 		while(time1[T3] < timeArray[i] && getPathStatus() == true){}
 
-		if (getPathStatus() == false) {break;}
+		if (getPathStatus() == false) 
+			break;
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
 	eStop();
@@ -269,6 +271,11 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
 	eStop();
+}
+
+void selectPath()
+{
+	//TODO, alison's function to do 
 }
 
 void Manual_teleop(bool pidControl)
