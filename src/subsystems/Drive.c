@@ -463,6 +463,8 @@ void logMotorData()
 
 void eStop()
 {
+	float absAngle;
+
     stopSpeedPIDTasks();
 	stopAnglePIDTasks();
 	resetPIDAngleControllers();
@@ -473,10 +475,15 @@ void eStop()
 	Swerve_resetEncoders(&leftModule);
 	Swerve_resetEncoders(&rightModule);
 
-	Swerve_setMotorTargetAngle(&leftModule, 0, LOCK_ANGLE);
-	Swerve_setMotorTargetAngle(&leftModule, 1, -LOCK_ANGLE);
-	Swerve_setMotorTargetAngle(&rightModule, 0, -LOCK_ANGLE);
-	Swerve_setMotorTargetAngle(&rightModule, 1, LOCK_ANGLE);
+	absAngle = fabs(Swerve_getAbsoluteAngle(&leftModule, 0))
+
+	absDifference = absAngle - LOCK_ANGLE;
+	absAngle = absAngle - absDifference;
+	
+	Swerve_setMotorTargetAngle(&leftModule, 0, absAngle);
+	Swerve_setMotorTargetAngle(&leftModule, 1, -absAngle);
+	Swerve_setMotorTargetAngle(&rightModule, 0, -absAngle);
+	Swerve_setMotorTargetAngle(&rightModule, 1, absAngle);
 
 	startAnglePIDTasks();
 

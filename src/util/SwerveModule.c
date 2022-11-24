@@ -10,6 +10,7 @@ typedef struct SwerveModule{
 	float targetAngle;
 	float targetDriveSpeed;
 
+	float absoluteAngle[2];
 	float targetMotorSpeeds[2];
 	float targetMotorAngles[2];
 
@@ -62,6 +63,7 @@ void Swerve_setMotorTargetSpeed(SwerveModule *swerve, int motIdx, float target)
 void Swerve_setMotorTargetAngle(SwerveModule *swerve, int motIdx, float target)
 {
 	swerve -> targetMotorAngles[motIdx] = target;
+	swerve -> absoluteAngle[motIdx] = absoluteAngle[motIdx] + target;
 }
 
 void Swerve_setDriveSpeed(SwerveModule *swerve, float motorOneSpeed, float motorTwoSpeed) // set drive speed out of 100%
@@ -99,6 +101,10 @@ float Swerve_getMotorAngle(SwerveModule *swerve, int motIdx)
 	return getMotorEncoder(swerve -> motorPorts[motIdx]) * ENCODER_TO_ANGLE;
 }
 
+float Swerve_getAbsoluteAngle(SwerveModule *swerve, int motIdx)
+{
+	return swerve -> absoluteAngle[motIdx];
+}
 
 float Swerve_getDriveSpeed(SwerveModule *swerve)
 {
