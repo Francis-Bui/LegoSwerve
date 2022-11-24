@@ -25,7 +25,7 @@ void selectPath();
 void logMotorData();
 
 void Manual_teleop(bool closedLoop);
-void Auto_followPathLinear( const float* distanceArray, const float* headingArray, const float* rpmArray, 
+void Auto_followPathLinear( const float* distanceArray, const float* headingArray, const float* rpmArray,
 							const float* timeArray, const float* rotationArray, const int PATH_LEN);
 
 void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const float* timeArray, const float* rotationArray, const int PATH_LEN);
@@ -157,10 +157,10 @@ task main()
 		case AUTO:
 
 			resetPIDSpeedControllers();
-			Swerve_setMotorTargetSpeed(&rightModule, 0, 100);
-			Swerve_setMotorTargetSpeed(&rightModule, 1, 100);
-			Swerve_setMotorTargetSpeed(&leftModule, 0, 100);
-			Swerve_setMotorTargetSpeed(&leftModule, 1, 100);
+			Swerve_setMotorTargetSpeed(&rightModule, 0, 170);
+			Swerve_setMotorTargetSpeed(&rightModule, 1, 170);
+			//Swerve_setMotorTargetSpeed(&leftModule, 0, 100);
+			//Swerve_setMotorTargetSpeed(&leftModule, 1, 100);
 
 			startSpeedPIDTasks();
 
@@ -183,7 +183,7 @@ task main()
 	}
 }
 
-void Auto_followPathLinear(const float* distanceArray, const float* headingArray, const float* rpmArray, 
+void Auto_followPathLinear(const float* distanceArray, const float* headingArray, const float* rpmArray,
 						const float* timeArray,  const float* rotationArray, int PATH_LEN)
 {
 	time1[T4] = 0;
@@ -230,11 +230,11 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 
 		time1[T3] = 0;
 
-		while  (time1[T3] < timeArray[i] && getPathStatus() == true && 
-				Robot_getRotation() < rotationArray[i] - HEADING_TOL && 
-				Robot_getRotation() > rotationArray + HEADING_TOL){}
+		while  (time1[T3] < timeArray[i] && getPathStatus() == true &&
+				Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL &&
+				Robot_getRotation(&Magnemite) > rotationArray + HEADING_TOL){}
 
-		if (getPathStatus() == false || Robot_getRotation() < rotationArray[i] - HEADING_TOL || Robot_getRotation() > rotationArray[i] + HEADING_TOL)
+		if (getPathStatus() == false || Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL || Robot_getRotation(&Magnemite) > rotationArray[i] + HEADING_TOL)
 			break;
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
@@ -272,7 +272,7 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
 
 		while(time1[T3] < timeArray[i] && getPathStatus() == true){}
 
-		if (getPathStatus() == false || Robot_getRotation() <= rotationArray[i] - HEADING_TOL || Robot_getRotation() >= rotationArray[i] + HEADING_TOL)
+		if (getPathStatus() == false || Robot_getRotation(&Magnemite) <= rotationArray[i] - HEADING_TOL || Robot_getRotation(&Magnemite) >= rotationArray[i] + HEADING_TOL)
 			break;
 
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
