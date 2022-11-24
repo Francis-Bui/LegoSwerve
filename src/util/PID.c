@@ -15,8 +15,9 @@ typedef struct PIDController{
 	float kD;
 
 	float integralLimit;
+	float target; // variable is used by drive straight controller
 } PIDController;
-
+ 
 
 void PID_initPIDConstants(PIDController *controller, float p, float i, float d, float integralLimit)
 {

@@ -11,15 +11,21 @@
 SwerveModule leftModule;
 SwerveModule rightModule;
 
+PIDController driveStraightController;
+
 void initializePIDSpeed();
 void initializePIDAngle();
+void initializePIDStraight();
 void resetPIDSpeedControllers();
 void resetPIDAngleControllers();
+void resetPIDStraight();
 
 void startSpeedPIDTasks();
 void stopSpeedPIDTasks();
 void startAnglePIDTasks();
 void stopAnglePIDTasks();
+void stopDriveStraightPID();
+void startDriveStraightPID();
 void eStop();
 void selectPath();
 void logMotorData();
@@ -119,6 +125,19 @@ task t_RPID_AngleTwo()
 	}
 }
 
+task t_DriveStraightPID()
+{
+	Robot_resetGyro(Magnemite);
+	while(true)
+	{
+		float err = driveStraightController.target - Robot_getRotation(&Magnemite);
+		float drive = PID_calculateDrive((&driveStraightController, err));
+
+		Swerve_setDriveSpeed(&leftModule, 50 + drive, 50 + drive);
+		Swerve_setDriveSpeed(&rightModule, 50 - drive, 50 - drive);
+	}
+}
+
 task main()
 {
 	DriveStates DriveState = AUTO;
@@ -130,6 +149,7 @@ task main()
 	Swerve_initModule(&rightModule, TOP_RIGHT_MOTOR, BOT_RIGHT_MOTOR);
 	initializePIDSpeed();
 	initializePIDAngle();
+	initializePIDStraight();
 
 
 	bool buttonPressed = false;
@@ -351,6 +371,16 @@ void stopAnglePIDTasks()
 	stopTask(t_RPID_AngleTwo);
 }
 
+void startDriveStraightPID()
+{
+	startTask(t_DriveStraightPID);
+}
+
+void stopDriveStraightPID()
+{
+	stopTask(t_DriveStraightPID);
+}
+
 void resetPIDSpeedControllers()
 {
 	PID_reset(&(leftModule.ctrlSpeedOne));
@@ -365,6 +395,11 @@ void resetPIDAngleControllers()
 	PID_reset(&(leftModule.ctrlAngleTwo));
 	PID_reset(&(rightModule.ctrlAngleOne));
 	PID_reset(&(rightModule.ctrlAngleTwo));
+}
+
+void resetPIDStraight()
+{
+	PID_reset(&driveStraightController);
 }
 
 void initializePIDSpeed()
@@ -403,6 +438,15 @@ void initializePIDAngle()
 	PID_initPIDConstants(&(rightModule.ctrlAngleTwo), R_ANGLE_TWO[0], R_ANGLE_TWO[1], R_ANGLE_TWO[2], R_ANGLE_TWO[3]);
 	PID_initOutputRange(&(rightModule.ctrlAngleTwo), R_ANGLE_TWO[4], R_ANGLE_TWO[5]);
 	PID_reset(&(rightModule.ctrlAngleTwo));
+}
+
+void initializePIDStraight()
+{
+	PID_initPIDConstants(&driveStraightController, STRAIGHT[0], STRAIGHT[1], STRAIGHT[2], STRAIGHT[3]);
+	PID_initOutputRange(&driveStraightController, STRAIGHT[4], STRAIGHT[5]);
+	PID_reset(&driveStraightController);
+
+	driveStraightController.target = 0;
 }
 
 void logMotorData()

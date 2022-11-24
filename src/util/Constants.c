@@ -41,82 +41,20 @@ const tSensors B_ULTRASONIC_PORT = S4;
 
 //PID arrays formatted as
 // arr = {p, i ,d ,integral limit, max, min}
-const float L_SPEED_ONE[6]=
-{
-    0.585,
-    0.0,
-    0.00,
-    50000.0,
-    100,
-    -100,
-};
-const float L_SPEED_TWO[6]=
-{
-    0.585,
-    0.00,
-    0.00,
-    50000.0,
-    100,
-    -100,
-};
-const float R_SPEED_ONE[6]=
-{
-    0.585,
-    0.01,
-    0.0,
-    50000.0,
-    100,
-    -100,
-};
-const float R_SPEED_TWO[6]=
-{
-    0.585,
-    0.01,
-    0.0,
-    50000.0,
-    100,
-    -100,
-};
+const float L_SPEED_ONE[6] = {0.585, 0.0, 0.00, 50000.0, 100, -100};
+const float L_SPEED_TWO[6] = {0.585, 0.00, 0.00, 50000.0, 100, -100};
+const float R_SPEED_ONE[6] = {0.585, 0.01, 0.0, 50000.0, 100, -100};
+const float R_SPEED_TWO[6] = {0.585, 0.01, 0.0, 50000.0, 100, -100};
 
 //==============================================================================================================
 
-const float L_ANGLE_ONE[6]=
-{
-    1.25,
-    0,
-    0,
-    0,
-    100,
-    -100,
-};
-const float L_ANGLE_TWO[6]=
-{
-    1.25,
-    0,
-    0,
-    0.,
-    100,
-    -100,
-};
-const float R_ANGLE_ONE[6]=
-{
-    1.5,
-    0,
-    0,
-    0,
-    100,
-    -100,
-};
-const float R_ANGLE_TWO[6]=
-{
-    1.35,
-    0,
-    0,
-    0,
-    100,
-    -100,
-};
+const float L_ANGLE_ONE[6] = {1.25, 0, 0, 0, 100, -100};
+const float L_ANGLE_TWO[6] = {1.25, 0, 0, 0, 100, -100};
+const float R_ANGLE_ONE[6] = {1.5, 0, 0, 0, 100, -100};
+const float R_ANGLE_TWO[6] = {1.35, 0, 0, 0, 100, -100};
 
+//==============================================================================================================
+const float DRIVE_STRAIGHT[6] = {0, 0, 0, 0, 100, -100};
 
 
 // These motors are declared here to stop vscode from glowing with errors -- remove before deployment.
