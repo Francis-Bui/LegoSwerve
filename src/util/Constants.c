@@ -24,6 +24,7 @@ const int PATH_ONE_LEN = 13;
 const int PATH_TWO_LEN = 4;
 
 const int LOCK_ANGLE = 45;
+const int HEADING_TOL = 5;
 
 // MOTOR INDEX
 
@@ -42,8 +43,8 @@ const tSensors B_ULTRASONIC_PORT = S4;
 // arr = {p, i ,d ,integral limit, max, min}
 const float L_SPEED_ONE[6]=
 {
-    0.500,
-    0.00,
+    0.585,
+    0.0,
     0.00,
     50000.0,
     100,
@@ -51,7 +52,7 @@ const float L_SPEED_ONE[6]=
 };
 const float L_SPEED_TWO[6]=
 {
-    0.500,
+    0.585,
     0.00,
     0.00,
     50000.0,
@@ -60,18 +61,18 @@ const float L_SPEED_TWO[6]=
 };
 const float R_SPEED_ONE[6]=
 {
-    0.500,
-    0.000,
-    0.000,
+    0.585,
+    0.01,
+    0.0,
     50000.0,
     100,
     -100,
 };
 const float R_SPEED_TWO[6]=
 {
-    0.500,
-    0.000,
-    0.000,
+    0.585,
+    0.01,
+    0.0,
     50000.0,
     100,
     -100,

@@ -74,6 +74,28 @@ const float PATH_ONE_TIME[13] = {
 
 };
 
+const float PATH_ONE_HEADING[13] = {
+
+    0,
+    0,
+    0,
+    0,
+    45,
+    90,
+    45,
+    0,
+    0,
+    -45,
+    -45,
+    0,
+    0,
+
+};
+
+const float PATH_ONE_US_FRONT[13];
+
+const float PATH_ONE_US_BACK[13];
+
 const float PATH_TWO_RPM_ALPHA[4] = {
 
     170,

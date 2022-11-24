@@ -313,10 +313,12 @@ void Manual_teleop(bool closedLoop)
 
 void startSpeedPIDTasks()
 {
-	startTask(t_LPID_SpeedOne);
-	startTask(t_LPID_SpeedTwo);
+	//startTask(t_LPID_SpeedOne);
+	//startTask(t_LPID_SpeedTwo);
 	startTask(t_RPID_SpeedOne);
 	startTask(t_RPID_SpeedTwo);
+	startTask(t_LPID_SpeedOne);
+	startTask(t_LPID_SpeedTwo);
 }
 
 void stopSpeedPIDTasks()
@@ -399,14 +401,14 @@ void initializePIDAngle()
 
 void logMotorData()
 {
-	datalogAddValueWithTimeStamp(0, Swerve_getMotorSpeed(&rightModule, 0));
-	datalogAddValueWithTimeStamp(1, Swerve_getMotorSpeed(&rightModule, 1));
-	datalogAddValueWithTimeStamp(2, Swerve_getMotorSpeed(&leftModule, 0));
-	datalogAddValueWithTimeStamp(3, Swerve_getMotorSpeed(&leftModule, 1));
-	datalogAddValueWithTimeStamp(4, Swerve_getMotorAngle(&rightModule, 0));
-	datalogAddValueWithTimeStamp(5, Swerve_getMotorAngle(&rightModule, 1));
-	datalogAddValueWithTimeStamp(6, Swerve_getMotorAngle(&leftModule, 0));
-	datalogAddValueWithTimeStamp(7, Swerve_getMotorAngle(&leftModule, 1));
+	datalogAddValueWithTimeStamp(0, Swerve_getMotorSpeed(&leftModule, 0));
+	datalogAddValueWithTimeStamp(1, Swerve_getMotorSpeed(&leftModule, 1));
+	datalogAddValueWithTimeStamp(2, Swerve_getMotorSpeed(&rightModule, 0));
+	datalogAddValueWithTimeStamp(3, Swerve_getMotorSpeed(&rightModule, 1));
+	datalogAddValueWithTimeStamp(4, Swerve_getMotorAngle(&leftModule, 0));
+	datalogAddValueWithTimeStamp(5, Swerve_getMotorAngle(&leftModule, 1));
+	datalogAddValueWithTimeStamp(6, Swerve_getMotorAngle(&rightModule, 0));
+	datalogAddValueWithTimeStamp(7, Swerve_getMotorAngle(&rightModule, 1));
 }
 
 void eStop()
