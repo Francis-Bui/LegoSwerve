@@ -1,22 +1,23 @@
 #include "JoystickDriver.c"
-#include "../util/Constants.c"
 
-short* getJoystickInput()
+const float JOYSTICK_SCALAR = 1.27;
+
+float* getJoystickInput()
 {
 
     getJoystickSettings(joystick);
-    
-    short strafePower = joystick.joy1_x1 / JOYSTICK_SCALAR;
-    short forwardPower = joystick.joy1_y1 / JOYSTICK_SCALAR;
 
-    short spinPower = joystick.joy1_x2 / JOYSTICK_SCALAR;
+    float strafePower = joystick.joy1_x1 / JOYSTICK_SCALAR;
+    float forwardPower = joystick.joy1_y1 / JOYSTICK_SCALAR;
 
-    short joystickInputs[3] = {0};
+    float spinPower = joystick.joy1_x2 / JOYSTICK_SCALAR;
 
-    joystickInputs[1] = strafePower;
-    joystickInputs[2] = forwardPower;
-    joystickInputs[3] = spinPower;
+    float joystickInputs[3] = {0,0,0};
 
-    return joystickInputs;
+    joystickInputs[0] = strafePower;
+    joystickInputs[1] = forwardPower;
+    joystickInputs[2] = spinPower;
+
+    return &joystickInputs;
 
 }

@@ -5,13 +5,13 @@ typedef struct Vec2
     float magnitude;
 } Vec2;
 
-Vec2 Vec2_createVector(float xIn, float yIn);
-float Vec2_dot(Vec2 v1, Vec2 v2);
+Vec2* Vec2_createVector(float xIn, float yIn);
+float Vec2_dot(Vec2 *v1, Vec2 *v2);
 void Vec2_scale(Vec2 *v, float scalar);
-Vec2 Vec2_projectOnto(Vec2 v1, Vec2 v2);
+Vec2* Vec2_projectOnto(Vec2 v1, Vec2 v2);
 
 
-Vec2 Vec2_createVector(float xIn, float yIn)
+Vec2* Vec2_createVector(float xIn, float yIn)
 {
     Vec2 vec;
     vec.x = xIn;
@@ -21,11 +21,11 @@ Vec2 Vec2_createVector(float xIn, float yIn)
 }
 
 /**
- * Calculates the dot product of two vectors. 
+ * Calculates the dot product of two vectors.
 */
-float Vec2_dot(Vec2 v1, Vec2 v2)
+float Vec2_dot(Vec2 *v1, Vec2* v2)
 {
-    return (v1.x)*(v2.x) + (v1.y)*(v2.y);
+    return (v1 -> x)*(v2 -> x) + (v1 -> y)*(v2 -> y);
 }
 
 /**
@@ -41,12 +41,10 @@ void Vec2_scale(Vec2 *v, float scalar)
 /**
  * Returns a new vector of v1 projected onto v2
 */
-Vec2 Vec2_projectOnto(Vec2 v1, Vec2 v2)
+Vec2* Vec2_projectOnto(Vec2* v1, Vec2* v2)
 {
     //projects v1 onto v2
-    float scalar = Vec2_dot(v1,v2) / pow(v2.magnitude, 2);
-    Vec2_scale(&v2, scalar);
-    return v2;
+    float scalar = Vec2_dot(v1,v2) / pow(v2 -> magnitude, 2);
+    Vec2_scale(v2, scalar);
+    return &v2;
 }
-
-

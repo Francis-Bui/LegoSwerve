@@ -6,7 +6,7 @@ typedef struct SwerveModule{
 	int motorOneIndex;
 	int motorTwoIndex;
 	int motorPorts[2];
-	
+
 	float targetAngle;
 	float targetDriveSpeed;
 
@@ -106,4 +106,3 @@ float Swerve_getDriveSpeed(SwerveModule *swerve)
 
 	return swerve -> currentDriveSpeed;
 }
-
