@@ -163,7 +163,7 @@ task main()
 
 	datalogClear();
 
-	//Robot_initRobot(&Magnemite, GYRO_PORT, ACCEL_PORT, F_ULTRASONIC_PORT, B_ULTRASONIC_PORT);
+	Robot_initRobot(&Magnemite, GYRO_PORT, ACCEL_PORT, F_ULTRASONIC_PORT, B_ULTRASONIC_PORT);
 	Swerve_initModule(&leftModule, TOP_LEFT_MOTOR, BOT_LEFT_MOTOR);
 	Swerve_initModule(&rightModule, TOP_RIGHT_MOTOR, BOT_RIGHT_MOTOR);
 	initializePIDSpeed();
@@ -195,18 +195,18 @@ task main()
 	{
 		case AUTO:
 
-			resetPIDSpeedControllers();
-			Swerve_setMotorTargetSpeed(&rightModule, 0, 120);
-			Swerve_setMotorTargetSpeed(&rightModule, 1, 120);
-			Swerve_setMotorTargetSpeed(&leftModule, 0, 120);
-			Swerve_setMotorTargetSpeed(&leftModule, 1, 120);
+			//resetPIDAngleControllers();
+			//Swerve_setMotorTargetAngle(&rightModule, 0, 90);
+			//Swerve_setMotorTargetAngle(&rightModule, 1, -90);
+			//Swerve_setMotorTargetAngle(&leftModule, 0, 90);
+			//Swerve_setMotorTargetAngle(&leftModule, 1, -90);
 
 
-			startSpeedPIDTasks();
+			//startAnglePIDTasks();
 
-			while (true) {logMotorData();}
+			//while (true) {logMotorData();}
 
-			//Auto_followPathLinear(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_LEN);
+			Auto_followPathLinear(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_ROTATION, PATH_ONE_LEN);
 			//Auto_followPathCurve(PATH_TWO_RPM_ALPHA, PATH_TWO_RPM_BETA, PATH_TWO_TIME, PATH_TWO_LEN);
 
 			break;
@@ -248,12 +248,12 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 		Swerve_setMotorTargetAngle(&rightModule, 1, -headingArray[i]);
 
 		startAnglePIDTasks();
-
+		const float tol = 1.1;
 		while (
-				(int) Swerve_getMotorAngle(&rightModule, 0) != headingArray[i] ||
-				(int) Swerve_getMotorAngle(&rightModule, 1) != -headingArray[i] ||
-				(int) Swerve_getMotorAngle(&leftModule, 0) != headingArray[i] ||
-				(int) Swerve_getMotorAngle(&leftModule, 1) != -headingArray[i]) {}
+				fabs(headingArray[i] - Swerve_getMotorAngle(&rightModule, 0)) >  tol ||
+				fabs(headingArray[i] - Swerve_getMotorAngle(&rightModule, 1)) >  tol ||
+				fabs(headingArray[i] - Swerve_getMotorAngle(&leftModule, 0)) >  tol ||
+				fabs(headingArray[i] - Swerve_getMotorAngle(&leftModule, 1)) >  tol) {}
 
 		stopAnglePIDTasks();
 		resetPIDAngleControllers();
@@ -270,11 +270,11 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 
 		time1[T3] = 0;
 
-		while  (time1[T3] < timeArray[i] && getPathStatus() == true &&
+		while  (time1[T3] < timeArray[i] && getPathStatus() == true /*&&
 				Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL &&
-				Robot_getRotation(&Magnemite) > rotationArray + HEADING_TOL){}
+				Robot_getRotation(&Magnemite) > rotationArray + HEADING_TOL*/){}
 
-		if (getPathStatus() == false || Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL || Robot_getRotation(&Magnemite) > rotationArray[i] + HEADING_TOL)
+		if (getPathStatus() == false /*|| Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL || Robot_getRotation(&Magnemite) > rotationArray[i] + HEADING_TOL*/)
 			break;
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
@@ -289,8 +289,8 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
     {
         stopSpeedPIDTasks();
 		resetPIDSpeedControllers();
-	    Swerve_setDriveSpeed(&leftModule, 0, 0);
-	    Swerve_setDriveSpeed(&rightModule, 0, 0);
+    Swerve_setDriveSpeed(&leftModule, 0, 0);
+    Swerve_setDriveSpeed(&rightModule, 0, 0);
 		Swerve_resetEncoders(&leftModule);
 		Swerve_resetEncoders(&rightModule);
 

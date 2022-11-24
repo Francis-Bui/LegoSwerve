@@ -74,7 +74,7 @@ const float PATH_ONE_TIME[13] = {
 
 };
 
-const float PATH_ONE_HEADING[13] = {
+const float PATH_ONE_ROTATION[13] = {
 
     0,
     0,
