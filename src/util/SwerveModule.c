@@ -63,7 +63,7 @@ void Swerve_setMotorTargetSpeed(SwerveModule *swerve, int motIdx, float target)
 void Swerve_setMotorTargetAngle(SwerveModule *swerve, int motIdx, float target)
 {
 	swerve -> targetMotorAngles[motIdx] = target;
-	swerve -> absoluteAngle[motIdx] = absoluteAngle[motIdx] + target;
+	swerve -> absoluteAngle[motIdx] = (swerve -> absoluteAngle[motIdx]) + target;
 }
 
 void Swerve_setDriveSpeed(SwerveModule *swerve, float motorOneSpeed, float motorTwoSpeed) // set drive speed out of 100%

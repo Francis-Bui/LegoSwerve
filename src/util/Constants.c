@@ -56,6 +56,8 @@ const float R_ANGLE_TWO[6] = {1.35, 0, 0, 0, 100, -100};
 //==============================================================================================================
 const float DRIVE_STRAIGHT[6] = {0, 0, 0, 0, 100, -100};
 
+const float ROTATE[6] = {0,0,0,0,100,-100};
+
 
 // These motors are declared here to stop vscode from glowing with errors -- remove before deployment.
 

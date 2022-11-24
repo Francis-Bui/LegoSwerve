@@ -29,8 +29,8 @@ void startAnglePIDTasks();
 void stopAnglePIDTasks();
 void stopDriveStraightPID();
 void startDriveStraightPID();
-void stopRotatePID();
-void startRotatePID();
+void stopRotateRobotPID();
+void startRotateRobotPID();
 void eStop();
 void selectPath();
 void logMotorData();
@@ -145,14 +145,14 @@ task t_DriveStraightPID()
 
 task t_RotateRobotPID()
 {
-	Robot_resetGyro(&Magnemite)
+	Robot_resetGyro(&Magnemite);
 	while(true)
 	{
 		float err = rotateRobotController.target - Robot_getRotation(&Magnemite);
 		float drive = PID_calculateDrive(&rotateRobotController, err);
 
-		Swerve_setDriveSpeed(&leftModule, drive);
-		Swerve_setDriveSpeed(&rightModule, drive);
+		Swerve_setDriveSpeed(&leftModule, drive, drive);
+		Swerve_setDriveSpeed(&rightModule, -drive, -drive);
 
 	}
 }
@@ -163,7 +163,7 @@ task main()
 
 	datalogClear();
 
-	Robot_initRobot(&Magnemite, GYRO_PORT, ACCEL_PORT, F_ULTRASONIC_PORT, B_ULTRASONIC_PORT);
+	//Robot_initRobot(&Magnemite, GYRO_PORT, ACCEL_PORT, F_ULTRASONIC_PORT, B_ULTRASONIC_PORT);
 	Swerve_initModule(&leftModule, TOP_LEFT_MOTOR, BOT_LEFT_MOTOR);
 	Swerve_initModule(&rightModule, TOP_RIGHT_MOTOR, BOT_RIGHT_MOTOR);
 	initializePIDSpeed();
@@ -196,10 +196,11 @@ task main()
 		case AUTO:
 
 			resetPIDSpeedControllers();
-			Swerve_setMotorTargetSpeed(&rightModule, 0, -170);
-			Swerve_setMotorTargetSpeed(&rightModule, 1, -170);
-			//Swerve_setMotorTargetSpeed(&leftModule, 0, 100);
-			//Swerve_setMotorTargetSpeed(&leftModule, 1, 100);
+			Swerve_setMotorTargetSpeed(&rightModule, 0, 120);
+			Swerve_setMotorTargetSpeed(&rightModule, 1, 120);
+			Swerve_setMotorTargetSpeed(&leftModule, 0, 120);
+			Swerve_setMotorTargetSpeed(&leftModule, 1, 120);
+
 
 			startSpeedPIDTasks();
 
@@ -358,8 +359,6 @@ void Manual_teleop(bool closedLoop)
 
 void startSpeedPIDTasks()
 {
-	//startTask(t_LPID_SpeedOne);
-	//startTask(t_LPID_SpeedTwo);
 	startTask(t_RPID_SpeedOne);
 	startTask(t_RPID_SpeedTwo);
 	startTask(t_LPID_SpeedOne);
@@ -487,7 +486,7 @@ void initializePIDRotate()
 	PID_initOutputRange(&rotateRobotController, ROTATE[4], ROTATE[5]);
 	PID_reset(&rotateRobotController);
 
-	//driveStraightController.target = 0;
+	rotateRobotController.target = 0;
 }
 
 void logMotorData()
@@ -516,11 +515,11 @@ void eStop()
 	Swerve_resetEncoders(&leftModule);
 	Swerve_resetEncoders(&rightModule);
 
-	absAngle = fabs(Swerve_getAbsoluteAngle(&leftModule, 0))
+	absAngle = fabs(Swerve_getAbsoluteAngle(&leftModule, 0));
 
-	absDifference = absAngle - LOCK_ANGLE;
+	float absDifference = absAngle - LOCK_ANGLE;
 	absAngle = absAngle - absDifference;
-	
+
 	Swerve_setMotorTargetAngle(&leftModule, 0, absAngle);
 	Swerve_setMotorTargetAngle(&leftModule, 1, -absAngle);
 	Swerve_setMotorTargetAngle(&rightModule, 0, -absAngle);
