@@ -45,6 +45,11 @@ Vec2* Vec2_projectOnto(Vec2* v1, Vec2* v2)
 {
     //projects v1 onto v2
     float scalar = Vec2_dot(v1,v2) / pow(v2 -> magnitude, 2);
-    Vec2_scale(v2, scalar);
-    return &v2;
+
+    Vec2 proj;
+    proj.x = v2 -> x;
+    proj.y = v2 -> y;
+    proj.magnitude = v2 -> magnitude;
+    Vec2_scale(&proj, scalar);
+    return &proj;
 }

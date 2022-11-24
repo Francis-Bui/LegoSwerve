@@ -12,13 +12,16 @@ SwerveModule leftModule;
 SwerveModule rightModule;
 
 PIDController driveStraightController;
+PIDController rotateRobotController;
 
 void initializePIDSpeed();
 void initializePIDAngle();
 void initializePIDStraight();
+void initializePIDRotate();
 void resetPIDSpeedControllers();
 void resetPIDAngleControllers();
 void resetPIDStraight();
+void resetPIDRotate();
 
 void startSpeedPIDTasks();
 void stopSpeedPIDTasks();
@@ -26,6 +29,8 @@ void startAnglePIDTasks();
 void stopAnglePIDTasks();
 void stopDriveStraightPID();
 void startDriveStraightPID();
+void stopRotatePID();
+void startRotatePID();
 void eStop();
 void selectPath();
 void logMotorData();
@@ -127,14 +132,28 @@ task t_RPID_AngleTwo()
 
 task t_DriveStraightPID()
 {
-	Robot_resetGyro(Magnemite);
+	Robot_resetGyro(&Magnemite);
 	while(true)
 	{
 		float err = driveStraightController.target - Robot_getRotation(&Magnemite);
-		float drive = PID_calculateDrive((&driveStraightController, err));
+		float drive = PID_calculateDrive(&driveStraightController, err);
 
 		Swerve_setDriveSpeed(&leftModule, 50 + drive, 50 + drive);
 		Swerve_setDriveSpeed(&rightModule, 50 - drive, 50 - drive);
+	}
+}
+
+task t_RotateRobotPID()
+{
+	Robot_resetGyro(&Magnemite)
+	while(true)
+	{
+		float err = rotateRobotController.target - Robot_getRotation(&Magnemite);
+		float drive = PID_calculateDrive(&rotateRobotController, err);
+
+		Swerve_setDriveSpeed(&leftModule, drive);
+		Swerve_setDriveSpeed(&rightModule, drive);
+
 	}
 }
 
@@ -177,8 +196,8 @@ task main()
 		case AUTO:
 
 			resetPIDSpeedControllers();
-			Swerve_setMotorTargetSpeed(&rightModule, 0, 170);
-			Swerve_setMotorTargetSpeed(&rightModule, 1, 170);
+			Swerve_setMotorTargetSpeed(&rightModule, 0, -170);
+			Swerve_setMotorTargetSpeed(&rightModule, 1, -170);
 			//Swerve_setMotorTargetSpeed(&leftModule, 0, 100);
 			//Swerve_setMotorTargetSpeed(&leftModule, 1, 100);
 
@@ -380,6 +399,14 @@ void stopDriveStraightPID()
 {
 	stopTask(t_DriveStraightPID);
 }
+void startRotateRobotPID()
+{
+	startTask(t_RotateRobotPID);
+}
+void stopRotateRobotPID()
+{
+	stopTask(t_RotateRobotPID);
+}
 
 void resetPIDSpeedControllers()
 {
@@ -400,6 +427,11 @@ void resetPIDAngleControllers()
 void resetPIDStraight()
 {
 	PID_reset(&driveStraightController);
+}
+
+void resetPIDRotate()
+{
+	PID_reset(&rotateRobotController);
 }
 
 void initializePIDSpeed()
@@ -442,11 +474,20 @@ void initializePIDAngle()
 
 void initializePIDStraight()
 {
-	PID_initPIDConstants(&driveStraightController, STRAIGHT[0], STRAIGHT[1], STRAIGHT[2], STRAIGHT[3]);
-	PID_initOutputRange(&driveStraightController, STRAIGHT[4], STRAIGHT[5]);
+	PID_initPIDConstants(&driveStraightController, DRIVE_STRAIGHT[0], DRIVE_STRAIGHT[1], DRIVE_STRAIGHT[2], DRIVE_STRAIGHT[3]);
+	PID_initOutputRange(&driveStraightController, DRIVE_STRAIGHT[4], DRIVE_STRAIGHT[5]);
 	PID_reset(&driveStraightController);
 
 	driveStraightController.target = 0;
+}
+
+void initializePIDRotate()
+{
+	PID_initPIDConstants(&rotateRobotController, ROTATE[0], ROTATE[1], ROTATE[2], ROTATE[3]);
+	PID_initOutputRange(&rotateRobotController, ROTATE[4], ROTATE[5]);
+	PID_reset(&rotateRobotController);
+
+	//driveStraightController.target = 0;
 }
 
 void logMotorData()
