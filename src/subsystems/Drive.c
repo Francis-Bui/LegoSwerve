@@ -15,8 +15,8 @@ PIDController driveStraightController;
 PIDController rotateRobotController;
 PIDController offsetController;
 
-void Drive_setOpposingSync();
-void Drive_setLinearSync();
+void Drive_straightOpposingSync(float motorSpeed);
+void Drive_straightLinearSync(float motorSpeed);
 
 void initializePIDSpeed();
 void initializePIDAngle();
@@ -27,7 +27,7 @@ void resetPIDAngleControllers();
 void resetPIDStraight();
 void resetPIDRotate();
 
-
+void startOffsetPID();
 void startSpeedPIDTasks();
 void stopSpeedPIDTasks();
 void startAnglePIDTasks();
@@ -200,9 +200,8 @@ task main()
 	initializePIDAngle();
 	initializePIDStraight();
 
-	PID_initPIDConstants(&offsetController, 0.4, 0.001, 0, 30)
-	PID_initOutputRange(&offsetController, 50, -50);
-	PID_reset(&offsetController);
+	//PID_initOutputRange(&offsetController, 50, -50);
+	//PID_reset(&offsetController);
 
 	//Swerve_setMotorTargetSpeed(&leftModule, 0, 120);
 	//Swerve_setMotorTargetSpeed(&rightModule, 0, 120);
@@ -315,14 +314,14 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
 
 void Drive_straightOpposingSync(float motorSpeed)
 {
-	setMotorSync(motor[leftModule.motorPorts[0]], motor[rightModule.motorPorts[0]], motorSpeed);
-	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[1]], -motorSpeed);
+	setMotorSync(motor[leftModule.motorPorts[0]], motor[rightModule.motorPorts[0]], 100, motorSpeed);
+	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[1]], 100, -motorSpeed);
 }
 
 void Drive_straightLinearSync(float motorSpeed)
 {
-	setMotorSync(motor[leftModule.motorPorts[0]], motor[rightModule.motorPorts[1]], motorSpeed);
-	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[0]], motorSpeed);
+	setMotorSync(motor[leftModule.motorPorts[0]], motor[rightModule.motorPorts[1]], 100, motorSpeed);
+	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[0]], 100, motorSpeed);
 }
 
 void selectPath()
@@ -349,12 +348,21 @@ void selectPath()
 	switch(buttonPressed)
 	{
 		case 1:
+			PID_initPIDConstants(&offsetController, .5, 0, 0, 30);
+			PID_initOutputRange(&offsetController, 50, -50);
+			PID_reset(&offsetController);
 			Auto_followPathLinear(PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_ROTATION, PATH_ONE_LEN);
 			break;
 		case 2:
+			PID_initPIDConstants(&offsetController, .5, 0, 0, 30);
+			PID_initOutputRange(&offsetController, 50, -50);
+			PID_reset(&offsetController);
 			Auto_followPathLinear(PATH_TWO_HEADING, PATH_TWO_RPM, PATH_TWO_TIME, PATH_TWO_ROTATION, PATH_TWO_LEN);
 			break;
 		case 3:
+			PID_initPIDConstants(&offsetController, 1, 0, 0, 30);
+			PID_initOutputRange(&offsetController, 50, -50);
+			PID_reset(&offsetController);
 			Auto_followPathLinear(PATH_THREE_HEADING, PATH_THREE_RPM, PATH_THREE_TIME, PATH_THREE_ROTATION, PATH_THREE_LEN);
 			break;
 	}
