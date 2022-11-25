@@ -15,6 +15,9 @@ PIDController driveStraightController;
 PIDController rotateRobotController;
 PIDController offsetController;
 
+void Drive_setOpposingSync();
+void Drive_setLinearSync();
+
 void initializePIDSpeed();
 void initializePIDAngle();
 void initializePIDStraight();
@@ -23,6 +26,7 @@ void resetPIDSpeedControllers();
 void resetPIDAngleControllers();
 void resetPIDStraight();
 void resetPIDRotate();
+
 
 void startSpeedPIDTasks();
 void stopSpeedPIDTasks();
@@ -50,6 +54,16 @@ typedef enum DriveStates
 	AUTO,
 	IDLE,
 } DriveStates;
+
+task t_syncDriveControllerOne()
+{
+	while(true){
+		float err =-leftModule.targetMotorSpeeds[0] - Swerve_getMotorSpeed(&leftModule, 0);
+		float drive = PID_calculateDrive(&(leftModule.ctrlSpeedOne), err);
+		Drive_straightOpposingSync(drive - offset);
+		wait1Msec(90);
+	}
+}
 
 task t_OffsetController()
 {
@@ -297,6 +311,18 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
 	eStop();
+}
+
+void Drive_straightOpposingSync(float motorSpeed)
+{
+	setMotorSync(motor[leftModule.motorPorts[0]], motor[rightModule.motorPorts[0]], motorSpeed);
+	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[1]], -motorSpeed);
+}
+
+void Drive_straightLinearSync(float motorSpeed)
+{
+	setMotorSync(motor[leftModule.motorPorts[0]], motor[rightModule.motorPorts[1]], motorSpeed);
+	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[0]], motorSpeed);
 }
 
 void selectPath()
