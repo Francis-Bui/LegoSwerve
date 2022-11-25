@@ -42,10 +42,12 @@ void Robot_resetAccel(Robot *robot)
 
 float Robot_getFrontDistance(Robot *robot)
 {
+		//return 50;
     return getUSDistance(robot -> frontUltrasonicIndex);
 }
 
 float Robot_getBackDistance(Robot *robot)
 {
+		//return 50;
     return getUSDistance(robot -> backUltrasonicIndex);
 }

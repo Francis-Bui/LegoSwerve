@@ -1,156 +1,21 @@
 // Paths are stored:
 //{distance, absolute heading, rpm, time}
 
-const float PATH_ONE_DISTANCE[13] = {
-
-    150,
-    150,
-    250,
-    350,
-    50,
-    60,
-    40,
-    50,
-    30,
-    30,
-    50,
-    30,
-    20,
-
-};
-
-const float PATH_ONE_HEADING[13] = {
-
-    0,
-    30,
-    40,
-    30,
-    -10,
-    -50,
-    120,
-    20,
-    -40,
-    -15,
-    -25,
-    5,
-    0,
-
-};
-
-const float PATH_ONE_RPM[13] = {
-
-    170,
-    150,
-    100,
-    90,
-    100,
-    150,
-    170,
-    90,
-    80,
-    60,
-    20,
-    30,
-    40,
-
-};
-
-const float PATH_ONE_TIME[13] = {
+const int PATH_ONE_LEN = 4;
+const float PATH_ONE_RPM[PATH_ONE_LEN] = {120,120,120,120};
+const float PATH_ONE_HEADING[PATH_ONE_LEN] = {0,90,90,90};
+const float PATH_ONE_ROTATION[PATH_ONE_LEN] = {0,0,0,0};
+const float PATH_ONE_TIME[PATH_ONE_LEN] = {2000,2000,2000,2000};
 
 
-    2000,
-    3000,
-    4000,
-    1000,
-    500,
-    750,
-    400,
-    250,
-    1750,
-    3000,
-    2100,
-    2200,
-    400,
+const int PATH_TWO_LEN = 4;
+const float PATH_TWO_RPM[PATH_TWO_LEN] = {120,70,100,120};
+const float PATH_TWO_HEADING[PATH_TWO_LEN] = {45,-45,-90,90};
+const float PATH_TWO_ROTATION[PATH_TWO_LEN] = {0,0,0,0};
+const float PATH_TWO_TIME[PATH_TWO_LEN] = {2000,1500,1000,2000};
 
-};
-
-const float PATH_ONE_ROTATION[13] = {
-
-    0,
-    0,
-    0,
-    0,
-    45,
-    90,
-    45,
-    0,
-    0,
-    -45,
-    -45,
-    0,
-    0,
-
-};
-
-const float PATH_ONE_US_FRONT[13] = {
-
-    0,
-    0,
-    0,
-    0,
-    45,
-    90,
-    45,
-    0,
-    0,
-    -45,
-    -45,
-    0,
-    0,
-
-};
-
-const float PATH_ONE_US_BACK[13] = {
-
-    0,
-    0,
-    0,
-    0,
-    45,
-    90,
-    45,
-    0,
-    0,
-    -45,
-    -45,
-    0,
-    0,
-
-};
-
-const float PATH_TWO_RPM_ALPHA[4] = {
-
-    170,
-    85,
-    170,
-    85,
-
-};
-
-const float PATH_TWO_RPM_BETA[4] = {
-
-    0,
-    170,
-    85,
-    170,
-
-};
-
-const float PATH_TWO_TIME[4] = {
-
-    2500,
-    2500,
-    2500,
-    2500,
-
-};
+const int PATH_THREE_LEN = 1;
+const float PATH_THREE_RPM[PATH_THREE_LEN] = {140};
+const float PATH_THREE_HEADING[PATH_THREE_LEN] = {0};
+const float PATH_THREE_ROTATION[PATH_THREE_LEN] = {0};
+const float PATH_THREE_TIME[PATH_THREE_LEN] = {7000};

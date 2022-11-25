@@ -13,6 +13,7 @@ SwerveModule rightModule;
 
 PIDController driveStraightController;
 PIDController rotateRobotController;
+PIDController offsetController;
 
 void initializePIDSpeed();
 void initializePIDAngle();
@@ -36,10 +37,12 @@ void selectPath();
 void logMotorData();
 
 void Manual_teleop(bool closedLoop);
-void Auto_followPathLinear( const float* distanceArray, const float* headingArray, const float* rpmArray,
+void Auto_followPathLinear(const float* headingArray, const float* rpmArray,
 							const float* timeArray, const float* rotationArray, const int PATH_LEN);
 
 void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const float* timeArray, const float* rotationArray, const int PATH_LEN);
+
+static float offset;
 
 typedef enum DriveStates
 {
@@ -48,13 +51,24 @@ typedef enum DriveStates
 	IDLE,
 } DriveStates;
 
+task t_OffsetController()
+{
+	while(true){
+		//0 - rotation
+		float err = -Robot_getRotation(&Magnemite);
+		offset = PID_calculateDrive(&offsetController, err);
+		wait1Msec(5);
+	}
+}
+
 task t_RPID_SpeedOne()
 {
 	while(true)
 	{
 		float err = rightModule.targetMotorSpeeds[0] - Swerve_getMotorSpeed(&rightModule, 0);
 		float drive = PID_calculateDrive(&(rightModule.ctrlSpeedOne), err);
-		setMotorSpeed(rightModule.motorPorts[0], drive);
+		setMotorSpeed(rightModule.motorPorts[0], drive - offset);
+		wait1Msec(10);
 	}
 }
 
@@ -64,7 +78,8 @@ task t_RPID_SpeedTwo()
 	{
 		float err = rightModule.targetMotorSpeeds[1] - Swerve_getMotorSpeed(&rightModule, 1);
 		float drive = PID_calculateDrive(&(rightModule.ctrlSpeedTwo), err);
-		setMotorSpeed(rightModule.motorPorts[1], drive);
+		setMotorSpeed(rightModule.motorPorts[1], drive - offset);
+		wait1Msec(10);
 	}
 }
 
@@ -74,7 +89,8 @@ task t_LPID_SpeedOne()
 	{
 		float err = leftModule.targetMotorSpeeds[0] - Swerve_getMotorSpeed(&leftModule, 0);
 		float drive = PID_calculateDrive(&(leftModule.ctrlSpeedOne), err);
-		setMotorSpeed(leftModule.motorPorts[0], drive);
+		setMotorSpeed(leftModule.motorPorts[0], drive + offset);
+		wait1Msec(90);
 	}
 }
 
@@ -84,7 +100,8 @@ task t_LPID_SpeedTwo()
 	{
 		float err = leftModule.targetMotorSpeeds[1] - Swerve_getMotorSpeed(&leftModule, 1);
 		float drive = PID_calculateDrive(&(leftModule.ctrlSpeedTwo), err);
-		setMotorSpeed(leftModule.motorPorts[1], drive);
+		setMotorSpeed(leftModule.motorPorts[1], drive + offset);
+		wait1Msec(90);
 	}
 }
 
@@ -153,7 +170,6 @@ task t_RotateRobotPID()
 
 		Swerve_setDriveSpeed(&leftModule, drive, drive);
 		Swerve_setDriveSpeed(&rightModule, -drive, -drive);
-
 	}
 }
 
@@ -170,67 +186,32 @@ task main()
 	initializePIDAngle();
 	initializePIDStraight();
 
+	PID_initPIDConstants(&offsetController, 0.4, 0.001, 0, 30)
+	PID_initOutputRange(&offsetController, 50, -50);
+	PID_reset(&offsetController);
 
-	bool buttonPressed = false;
-	while(buttonPressed)
-	{
-		if (getButtonPress(buttonLeft))
-		{
-			DriveState = AUTO;
-			buttonPressed = false;
-		}
-		else if (getButtonPress(buttonRight))
-		{
-			DriveState = MANUAL;
-			buttonPressed = false;
-		}
-		else if (getButtonPress(buttonUp))
-		{
-			DriveState = IDLE;
-			buttonPressed = false;
-		}
-	}
+	//Swerve_setMotorTargetSpeed(&leftModule, 0, 120);
+	//Swerve_setMotorTargetSpeed(&rightModule, 0, 120);
+	//Swerve_setMotorTargetSpeed(&rightModule, 1, 120);
+	//Swerve_setMotorTargetSpeed(&leftModule, 1, 120);
+	//startSpeedPIDTasks();
+	//startTask(t_OffsetController);
+	//while(true)
+	//{
 
-	switch(DriveState)
-	{
-		case AUTO:
-
-			//resetPIDAngleControllers();
-			//Swerve_setMotorTargetAngle(&rightModule, 0, 90);
-			//Swerve_setMotorTargetAngle(&rightModule, 1, -90);
-			//Swerve_setMotorTargetAngle(&leftModule, 0, 90);
-			//Swerve_setMotorTargetAngle(&leftModule, 1, -90);
-
-
-			//startAnglePIDTasks();
-
-			//while (true) {logMotorData();}
-
-			Auto_followPathLinear(PATH_ONE_DISTANCE, PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_ROTATION, PATH_ONE_LEN);
-			//Auto_followPathCurve(PATH_TWO_RPM_ALPHA, PATH_TWO_RPM_BETA, PATH_TWO_TIME, PATH_TWO_LEN);
-
-			break;
-
-		case IDLE:
-
-			break;
-
-		case MANUAL:
-
-			Manual_teleop(true);
-
-			break;
-	}
+	//}
+	selectPath();
 }
 
-void Auto_followPathLinear(const float* distanceArray, const float* headingArray, const float* rpmArray,
+void Auto_followPathLinear(const float* headingArray, const float* rpmArray,
 						const float* timeArray,  const float* rotationArray, int PATH_LEN)
 {
 	time1[T4] = 0;
 
-    for(int i = 0; i < PATH_LEN; i++)
-    {
-        stopSpeedPIDTasks();
+  for(int i = 0; i < PATH_LEN; i++)
+  {
+    stopSpeedPIDTasks();
+    stopTask(t_OffsetController);
 		stopAnglePIDTasks();
 		resetPIDAngleControllers();
 		resetPIDSpeedControllers();
@@ -251,21 +232,19 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 		const float tol = 1.1;
 		while (
 				fabs(headingArray[i] - Swerve_getMotorAngle(&rightModule, 0)) >  tol ||
-				fabs(headingArray[i] - Swerve_getMotorAngle(&rightModule, 1)) >  tol ||
+				fabs(-headingArray[i] - Swerve_getMotorAngle(&rightModule, 1)) >  tol ||
 				fabs(headingArray[i] - Swerve_getMotorAngle(&leftModule, 0)) >  tol ||
-				fabs(headingArray[i] - Swerve_getMotorAngle(&leftModule, 1)) >  tol) {}
+				fabs(-headingArray[i] - Swerve_getMotorAngle(&leftModule, 1)) >  tol) {
+				}
 
 		stopAnglePIDTasks();
-		resetPIDAngleControllers();
-
-		Swerve_resetEncoders(&leftModule);
-		Swerve_resetEncoders(&rightModule);
 
 		Swerve_setMotorTargetSpeed(&leftModule, 0, rpmArray[i]);
 		Swerve_setMotorTargetSpeed(&leftModule, 1, rpmArray[i]);
 		Swerve_setMotorTargetSpeed(&rightModule, 0, rpmArray[i]);
 		Swerve_setMotorTargetSpeed(&rightModule, 1, rpmArray[i]);
 
+		startOffsetPID();
 		startSpeedPIDTasks();
 
 		time1[T3] = 0;
@@ -274,7 +253,7 @@ void Auto_followPathLinear(const float* distanceArray, const float* headingArray
 				Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL &&
 				Robot_getRotation(&Magnemite) > rotationArray + HEADING_TOL*/){}
 
-		if (getPathStatus() == false /*|| Robot_getRotation(&Magnemite) < rotationArray[i] - HEADING_TOL || Robot_getRotation(&Magnemite) > rotationArray[i] + HEADING_TOL*/)
+		if (!getPathStatus())
 			break;
         //while (Swerve_getDist(&rightModule) != distanceArray[i] || Swerve_getDist(&leftModule) != distanceArray[i]){}
 	}
@@ -322,7 +301,37 @@ void Auto_followPathCurve(const float* rpmAlpha, const float* rpmBeta, const flo
 
 void selectPath()
 {
-	//TODO, alison's function to do
+	displayString(1,"Press left for path 1");
+	displayString(2,"Press up for path 2");
+	displayString(3,"Press right for path 3");
+	int buttonPressed = 0;
+	while(buttonPressed==0)
+	{
+		if (getButtonPress(buttonLeft))
+		{
+			buttonPressed = 1;
+	  }
+	  else if (getButtonPress(buttonUp))
+	  {
+	  	buttonPressed = 2;
+	  }
+	  else if (getButtonPress(buttonRight))
+	  {
+	  	buttonPressed = 3;
+	  }
+	}
+	switch(buttonPressed)
+	{
+		case 1:
+			Auto_followPathLinear(PATH_ONE_HEADING, PATH_ONE_RPM, PATH_ONE_TIME, PATH_ONE_ROTATION, PATH_ONE_LEN);
+			break;
+		case 2:
+			Auto_followPathLinear(PATH_TWO_HEADING, PATH_TWO_RPM, PATH_TWO_TIME, PATH_TWO_ROTATION, PATH_TWO_LEN);
+			break;
+		case 3:
+			Auto_followPathLinear(PATH_THREE_HEADING, PATH_THREE_RPM, PATH_THREE_TIME, PATH_THREE_ROTATION, PATH_THREE_LEN);
+			break;
+	}
 }
 
 void Manual_teleop(bool closedLoop)
@@ -375,6 +384,9 @@ void stopSpeedPIDTasks()
 
 void startAnglePIDTasks()
 {
+	resetPIDAngleControllers();
+	Swerve_resetEncoders(&leftModule);
+	Swerve_resetEncoders(&rightModule);
 	startTask(t_LPID_AngleOne);
 	startTask(t_LPID_AngleTwo);
 	startTask(t_RPID_AngleOne);
@@ -389,22 +401,15 @@ void stopAnglePIDTasks()
 	stopTask(t_RPID_AngleTwo);
 }
 
-void startDriveStraightPID()
-{
-	startTask(t_DriveStraightPID);
+void startOffsetPID(){
+	PID_reset(&offsetController);
+	Robot_resetGyro(&Magnemite);
+	startTask(t_OffsetController);
 }
 
-void stopDriveStraightPID()
+void stopOffsetPID()
 {
-	stopTask(t_DriveStraightPID);
-}
-void startRotateRobotPID()
-{
-	startTask(t_RotateRobotPID);
-}
-void stopRotateRobotPID()
-{
-	stopTask(t_RotateRobotPID);
+	stopTask(t_OffsetController);
 }
 
 void resetPIDSpeedControllers()

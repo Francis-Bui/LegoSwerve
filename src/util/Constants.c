@@ -20,9 +20,6 @@ const float POWER_SCALAR = 1.70;
 
 // AUTO CONSTANTS
 
-const int PATH_ONE_LEN = 13;
-const int PATH_TWO_LEN = 4;
-
 const int LOCK_ANGLE = 45;
 const int HEADING_TOL = 5;
 
