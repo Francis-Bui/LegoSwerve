@@ -216,6 +216,7 @@ task main()
 	selectPath();
 }
 
+
 void Auto_followPathLinear(const float* headingArray, const float* rpmArray,
 						const float* timeArray,  const float* rotationArray, int PATH_LEN)
 {
@@ -324,6 +325,12 @@ void Drive_straightLinearSync(float motorSpeed)
 	setMotorSync(motor[leftModule.motorPorts[1]], motor[rightModule.motorPorts[0]], 100, motorSpeed);
 }
 
+/**
+ * Path selection method, checks for which button on the EV3 is pressed, then 
+ * calls the associated path with its PID configurations. 
+ * 
+ * Written by Alison Thompson
+*/
 void selectPath()
 {
 	displayString(1,"Press left for path 1");
@@ -400,6 +407,11 @@ void Manual_teleop(bool closedLoop)
 	}
 }
 
+/**
+ * Function starts speed PID tasks
+ * 
+ * Written by Akil Pathiranage
+*/
 void startSpeedPIDTasks()
 {
 	startTask(t_RPID_SpeedOne);
@@ -408,6 +420,11 @@ void startSpeedPIDTasks()
 	startTask(t_LPID_SpeedTwo);
 }
 
+/**
+ * Function stops speed PID tasks
+ * 
+ * Written by Akil Pathiranage
+*/
 void stopSpeedPIDTasks()
 {
 	stopTask(t_LPID_SpeedOne);
@@ -416,6 +433,11 @@ void stopSpeedPIDTasks()
     stopTask(t_RPID_SpeedTwo);
 }
 
+/**
+ * Function starts angle PID tasks
+ * 
+ * Written by Akil Pathiranage
+*/
 void startAnglePIDTasks()
 {
 	resetPIDAngleControllers();
@@ -427,6 +449,11 @@ void startAnglePIDTasks()
 	startTask(t_RPID_AngleTwo);
 }
 
+/**
+ * Function stops angle PID tasks
+ * 
+ * Written by Akil Pathiranage
+*/
 void stopAnglePIDTasks()
 {
 	stopTask(t_LPID_AngleOne);
@@ -435,17 +462,29 @@ void stopAnglePIDTasks()
 	stopTask(t_RPID_AngleTwo);
 }
 
+/**
+ * Function begins offset PID task
+ * Written by Akil Pathiranage
+*/
 void startOffsetPID(){
 	PID_reset(&offsetController);
 	Robot_resetGyro(&Magnemite);
 	startTask(t_OffsetController);
 }
 
+/**
+ * Function stops offset PID task
+ * Written by Akil Pathiranage
+*/
 void stopOffsetPID()
 {
 	stopTask(t_OffsetController);
 }
 
+/**
+ * Resets speed PID controllers
+ * Written by Akil Pathiranage
+*/
 void resetPIDSpeedControllers()
 {
 	PID_reset(&(leftModule.ctrlSpeedOne));
@@ -454,6 +493,10 @@ void resetPIDSpeedControllers()
 	PID_reset(&(rightModule.ctrlSpeedTwo));
 }
 
+/**
+ * Resets angle PID controllers
+ * Written by Akil Pathiranage
+*/
 void resetPIDAngleControllers()
 {
 	PID_reset(&(leftModule.ctrlAngleOne));
@@ -472,6 +515,10 @@ void resetPIDRotate()
 	PID_reset(&rotateRobotController);
 }
 
+/**
+ * Initializes PID speed controllers
+ * Written by Akil Pathiranage
+*/
 void initializePIDSpeed()
 {
 	PID_initPIDConstants(&(leftModule.ctrlSpeedOne), L_SPEED_ONE[0], L_SPEED_ONE[1], L_SPEED_ONE[2], L_SPEED_ONE[3]);
@@ -491,6 +538,10 @@ void initializePIDSpeed()
 	PID_reset(&(rightModule.ctrlSpeedTwo));
 }
 
+/**
+ * Initializes PID angle controllers
+ * Written by Akil Pathiranage
+*/
 void initializePIDAngle()
 {
 	PID_initPIDConstants(&(leftModule.ctrlAngleOne), L_ANGLE_ONE[0], L_ANGLE_ONE[1], L_ANGLE_ONE[2], L_ANGLE_ONE[3]);

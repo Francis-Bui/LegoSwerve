@@ -3,6 +3,12 @@
 #include "Constants.c"
 
 typedef struct SwerveModule{
+	/*
+		In a swerve module, it is assumed that positive power to both motors
+		causes forward drive for the wheel. A positive power to motorPort[0]
+		and a negative power to motorPort[1] will produce clockwise rotation 
+		of the sweve module. 
+	*/
 	int motorOneIndex;
 	int motorTwoIndex;
 	int motorPorts[2];
@@ -66,6 +72,9 @@ void Swerve_setMotorTargetAngle(SwerveModule *swerve, int motIdx, float target)
 	swerve -> absoluteAngle[motIdx] = (swerve -> absoluteAngle[motIdx]) + target;
 }
 
+/**
+ * Function for setting raw drive power to each motor. 
+*/
 void Swerve_setDriveSpeed(SwerveModule *swerve, float motorOneSpeed, float motorTwoSpeed) // set drive speed out of 100%
 {
 	setMotorSpeed(swerve -> motorPorts[0], motorOneSpeed);
@@ -85,7 +94,7 @@ float Swerve_getSpeed(SwerveModule *swerve) // Returns current swerve module spe
 /**
  * Returns motor speed in rpm
 */
-float Swerve_getMotorSpeed(SwerveModule *swerve, int motIdx) // Returns meters per second of differential gear
+float Swerve_getMotorSpeed(SwerveModule *swerve, int motIdx)
 {
 	// swerve -> motorOneSpeed = (PI * GEAR_RADIUS * getMotorRPM(swerve -> motorOneIndex) / 60);
 	// return swerve -> motorOneSpeed;
@@ -101,6 +110,9 @@ float Swerve_getMotorAngle(SwerveModule *swerve, int motIdx)
 	return getMotorEncoder(swerve -> motorPorts[motIdx]) * ENCODER_TO_ANGLE;
 }
 
+/**
+ * Returns absolute angle of moto
+*/
 float Swerve_getAbsoluteAngle(SwerveModule *swerve, int motIdx)
 {
 	return swerve -> absoluteAngle[motIdx];
